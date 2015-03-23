@@ -20,11 +20,20 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     //Declare Titles and Icons for Nav Drawer
     String TITLES[];
 
+    //Declare Titles for Cards
+    String EVENT_TITLES[] = {"Event 1", "Event 2", "Event 3", "Event 4"};
+
     //Create string res for name and email in header view
     String NAME = "Jacob Pandl";
     String EMAIL = "jpandl19@gmail.com";
     int PROFILE_PIC = R.drawable.profile_pic_example;
 
+    //Create Adapters for Card View
+    RecyclerView mCardView;
+    RecyclerView.Adapter mCardAdapter;
+    RecyclerView.LayoutManager mCardManager;
+
+    //Create Adapters for drawer
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
@@ -48,10 +57,11 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
-        //Declare RecycleView and set Adapter
+        //Declare RecycleView and set Adapter for drawer
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
         mRecyclerView.setHasFixedSize(true);    //List objects have fixed size
         mAdapter = new MyAdapter(TITLES, ICONS, NAME, EMAIL, PROFILE_PIC);
+
 
         mRecyclerView.setAdapter(mAdapter);
 
