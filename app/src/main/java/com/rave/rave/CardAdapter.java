@@ -12,21 +12,25 @@ import android.widget.TextView;
  */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
-    private String event_titles[];
+    private String[] event_titles;
+    private String[] event_addresses;
 
-    public CardAdapter(String[] event_titles) {
+    public CardAdapter(String[] event_titles, String[] event_addresses) {
         this.event_titles = event_titles;
+        this.event_addresses = event_addresses;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView titleTextView;
+        TextView addressTextView;
         ImageView imageView;
 
 
         public ViewHolder(View itemView) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
             super(itemView);
 
-            textView = (TextView) itemView.findViewById(R.id.event_title_text);
+            titleTextView = (TextView) itemView.findViewById(R.id.event_title_text);
+            addressTextView = (TextView) itemView.findViewById(R.id.event_address_text);
             imageView = (ImageView) itemView.findViewById(R.id.event_image);
         }
     }
@@ -41,7 +45,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.textView.setText(event_titles[position-1]);
+        holder.titleTextView.setText(event_titles[position]);
+        holder.addressTextView.setText(event_addresses[position]);
         holder.imageView.setImageResource(R.drawable.madison_header_background);
     }
 

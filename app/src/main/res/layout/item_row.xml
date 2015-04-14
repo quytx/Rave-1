@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
+    android:clickable="true"
+    android:background="?android:attr/selectableItemBackground"
     android:theme="@style/ThemeOverlay.AppCompat.Light">
 
     <ImageView

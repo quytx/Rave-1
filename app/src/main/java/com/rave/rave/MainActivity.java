@@ -1,5 +1,6 @@
 package com.rave.rave;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -7,10 +8,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener{
@@ -28,10 +32,15 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     String EMAIL = "jpandl19@gmail.com";
     int PROFILE_PIC = R.drawable.profile_pic_example;
 
-    //Create Adapters for Card View
-    RecyclerView mCardView;
-    RecyclerView.Adapter mCardAdapter;
-    RecyclerView.LayoutManager mCardManager;
+
+    //Variables for EventStreamFragment
+    final String[] EVENT_NAMES = {"Party Name 1", "Party Name 2", "Party Name 3",
+            "Party 4 Name", "Party Name 5"};
+    final static String EVENT_NAME = "Event Names";
+
+    final static String LOCATIONS = "Event Locations";
+    final String[] EVENT_LOCATIONS = {"123 Main St", "5026 N Woodburn", "56 N Park", "27 N Brooks",
+            "West Palm Beach"};
 
     //Create Adapters for drawer
     RecyclerView mRecyclerView;
@@ -57,10 +66,19 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
+
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+
+
         //Declare RecycleView and set Adapter for drawer
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
         mRecyclerView.setHasFixedSize(true);    //List objects have fixed size
-        mAdapter = new MyAdapter(TITLES, ICONS, NAME, EMAIL, PROFILE_PIC);
+        mAdapter = new NavAdapter(TITLES, ICONS, NAME, EMAIL, PROFILE_PIC);
 
 
         mRecyclerView.setAdapter(mAdapter);
@@ -91,12 +109,55 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             }
         };
 
+        final GestureDetector mGestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
+
+            @Override public boolean onSingleTapUp(MotionEvent e) {
+                return true;
+            }
+
+        });
+
+        mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+                View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+
+                if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
+                    drawerLayout.closeDrawers();
+                    int position = recyclerView.getChildAdapterPosition(child);
+                    Toast.makeText(MainActivity.this, "The Item Clicked is: " +
+                            position, Toast.LENGTH_SHORT).show();
+
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+
+            }
+        });
+
+
+
         drawerLayout.setDrawerListener(mDrawerToggle);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         mDrawerToggle.syncState();
+        
+        //Create bundle for EventStreamFragment
+        Bundle eventBundle = new Bundle();
+        eventBundle.putStringArray(EVENT_NAME, EVENT_TITLES);
+        eventBundle.putStringArray(LOCATIONS, EVENT_LOCATIONS);
+        
+        //Set args and create fragment
+        if(savedInstanceState==null) {
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            EventStreamFragment eventStreamFragment = new EventStreamFragment();
+            eventStreamFragment.setArguments(eventBundle);
+            fragmentTransaction.add(R.id.fragmentContainer, eventStreamFragment).commit();
+        }
     }
 
 
