@@ -2,24 +2,47 @@ package com.rave.rave;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import Adapters.ListAdapter;
+import Data.EventData;
+
 
 public class EventActivity extends ActionBarActivity {
 
     private Toolbar toolbar;
+
+    //Create Adapters for Card View
+    RecyclerView recyclerView;
+    RecyclerView.Adapter mRecyclerAdapter;
+    RecyclerView.LayoutManager mLayoutManager;
+
+
     private String mEventTitle;
     private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.event_detail_top_view);
+        setContentView(R.layout.recycler_layout);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
+        ListAdapter listAdapter = new ListAdapter();
+        recyclerView.setAdapter(listAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mEventTitle = getIntent().getStringExtra(MainActivity.EVENT_NAME);
+
+        listAdapter.setEventDataSet(getEventData());
+
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -28,11 +51,21 @@ public class EventActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+    }
 
+    private List<EventData> getEventData() {
+        List<EventData> dataSet = new ArrayList<>();
 
-        textView = (TextView)findViewById(R.id.event_title_text);
-        textView.setText(mEventTitle);
+        EventData data = new EventData();
+        data.eventTitle = mEventTitle;
+        data.eventImage = R.drawable.madison_header_background;
+        data.profilePic = R.drawable.profile_pic_example;
+        data.description = "THIS IS A NEW EVENT DESCRIPTION......." +
+                "..................................................." +
+                "...................................................";
+        dataSet.add(data);
 
+        return dataSet;
     }
 
 

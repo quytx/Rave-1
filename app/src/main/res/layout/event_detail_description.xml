@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:id="@+id/event_detail_secondary_image"
+        android:scaleType="centerCrop"
+        android:background="@color/primary_material_light"
+        android:src="@drawable/madison_header_background"/>
+
+    <TextView
+        android:id="@+id/event_description"
+        android:text="Description..........................................................
+        ...................................................................................."
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="@dimen/text_edge_padding"
+        android:layout_marginLeft="@dimen/text_edge_padding"
+        android:textSize="@dimen/abc_text_size_medium_material"/>
+
+
+</LinearLayout>
