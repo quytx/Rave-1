@@ -11,12 +11,15 @@
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:scaleType="centerCrop"
+        android:background="@color/primary_material_light"
         android:src="@drawable/madison_header_background"/>
+
     <TextView
         android:id="@+id/event_title_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/abc_text_size_large_material"/>
 
 </LinearLayout>

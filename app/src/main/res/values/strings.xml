@@ -6,6 +6,7 @@
     <string name="drawer_open">open</string>
     <string name="drawer_closed">closed</string>
     <string-array name="drawer_items">
+        <item>Event Stream</item>
         <item>Itinerary</item>
         <item>Friends</item>
         <item>Favorites</item>

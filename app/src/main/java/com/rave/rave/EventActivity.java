@@ -28,6 +28,8 @@ public class EventActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+
         textView = (TextView)findViewById(R.id.event_title_text);
         textView.setText(mEventTitle);
 

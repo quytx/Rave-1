@@ -1,5 +1,6 @@
 package com.rave.rave;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,6 @@ public class NavAdapter extends RecyclerView.Adapter<NavAdapter.ViewHolder> {
 
         public ViewHolder(View itemView,int ViewType) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
             super(itemView);
-
 
             // Here we set the appropriate view in accordance with the the view type as passed when the holder object is created
 
@@ -113,6 +113,9 @@ public class NavAdapter extends RecyclerView.Adapter<NavAdapter.ViewHolder> {
     public void onBindViewHolder(NavAdapter.ViewHolder holder, int position) {
         if(holder.Holderid ==1) {                              // as the list view is going to be called after the header view so we decrement the
             // position by 1 and pass it to the holder while setting the text and image
+            if(position-1==0){
+                holder.itemView.setBackgroundColor(Color.LTGRAY);
+            }
             holder.textView.setText(mNavTitles[position - 1]); // Setting the Text with the array of our Titles
             holder.imageView.setImageResource(mIcons[position -1]);// Settimg the image with array of our icons
         }

@@ -1,6 +1,7 @@
 package com.rave.rave;
 
 import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -22,7 +23,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     private Toolbar toolbar;
 
     //Declare Titles and Icons for Nav Drawer
-    String TITLES[];
+    String DRAWER_ITEMS[];
 
     //Declare Titles for Cards
     String EVENT_TITLES[] = {"Event 1", "Event 2", "Event 3", "Event 4"};
@@ -44,9 +45,11 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
     //Create Adapters for drawer
     RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
+    NavAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
     DrawerLayout drawerLayout;
+
+    private int currItemSelected = 1;
 
     ActionBarDrawerToggle mDrawerToggle;
 
@@ -55,9 +58,9 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TITLES = getResources().getStringArray(R.array.drawer_items);
+        DRAWER_ITEMS = getResources().getStringArray(R.array.drawer_items);
 
-        int ICONS[] = {R.drawable.itinerary_icon,
+        int ICONS[] = {R.drawable.event_stream_icon,R.drawable.itinerary_icon,
                 R.drawable.friends_icon,
                 R.drawable.favorites_icon,
                 R.drawable.history_icon,
@@ -78,8 +81,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         //Declare RecycleView and set Adapter for drawer
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
         mRecyclerView.setHasFixedSize(true);    //List objects have fixed size
-        mAdapter = new NavAdapter(TITLES, ICONS, NAME, EMAIL, PROFILE_PIC);
-
+        mAdapter = new NavAdapter(DRAWER_ITEMS, ICONS, NAME, EMAIL, PROFILE_PIC);
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -109,6 +111,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             }
         };
 
+
         final GestureDetector mGestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
 
             @Override public boolean onSingleTapUp(MotionEvent e) {
@@ -116,18 +119,26 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             }
 
         });
-
+        //**********BUG: NO CLICK EFFECT FOR ITEM 1 and 2************
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
                 View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
 
+
                 if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
-                    drawerLayout.closeDrawers();
                     int position = recyclerView.getChildAdapterPosition(child);
+
+                    if(currItemSelected != position && position != 0) {
+                        recyclerView.getChildAt(currItemSelected).setBackgroundColor(Color.WHITE);
+                        currItemSelected = position;
+                        child.setBackgroundColor(Color.LTGRAY);
+                    }
+
                     Toast.makeText(MainActivity.this, "The Item Clicked is: " +
                             position, Toast.LENGTH_SHORT).show();
 
+                    drawerLayout.closeDrawers();
                     return true;
                 }
                 return false;
