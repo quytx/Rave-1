@@ -49,4 +49,5 @@
         android:id="@+id/profile_pic"
         android:layout_gravity="center_horizontal" />
 
+
 </LinearLayout>

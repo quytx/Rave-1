@@ -138,6 +138,12 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                     Toast.makeText(MainActivity.this, "The Item Clicked is: " +
                             position, Toast.LENGTH_SHORT).show();
 
+//                    MapFragment mMapFragment = MapFragment.newInstance();
+//                    FragmentTransaction fragmentTransaction =
+//                            getFragmentManager().beginTransaction();
+//                    fragmentTransaction.add(R.id.fragmentContainer, mMapFragment);
+//                    fragmentTransaction.commit();
+
                     drawerLayout.closeDrawers();
                     return true;
                 }

@@ -7,13 +7,11 @@
     android:background="#80ffffff"
     android:elevation="4dp">
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="200dp"
-        android:id="@+id/event_detail_secondary_image"
-        android:scaleType="centerCrop"
-        android:background="@color/primary_material_light"
-        android:src="@drawable/madison_header_background"/>
+    <fragment
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
 
     <TextView
         android:text="@string/description_title"
