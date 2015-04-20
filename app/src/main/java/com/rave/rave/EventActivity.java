@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import Adapters.ListAdapter;
+import Adapters.EventDetailAdapter;
 import Data.EventData;
 
 
@@ -29,19 +29,21 @@ public class EventActivity extends ActionBarActivity {
     private String mEventTitle;
     private TextView textView;
 
+    private String[] detailTitles = {"Date", "Time", "Location", "Type"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_layout);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
-        ListAdapter listAdapter = new ListAdapter();
-        recyclerView.setAdapter(listAdapter);
+        EventDetailAdapter eventDetailAdapter = new EventDetailAdapter();
+        recyclerView.setAdapter(eventDetailAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mEventTitle = getIntent().getStringExtra(MainActivity.EVENT_NAME);
 
-        listAdapter.setEventDataSet(getEventData());
+        eventDetailAdapter.setEventDataSet(getEventData());
 
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -57,13 +59,26 @@ public class EventActivity extends ActionBarActivity {
         List<EventData> dataSet = new ArrayList<>();
 
         EventData data = new EventData();
+
+    //      int detailListSize = data.detailTitles.length;
+
         data.eventTitle = mEventTitle;
         data.eventImage = R.drawable.madison_header_background;
         data.profilePic = R.drawable.profile_pic_example;
-        data.description = "THIS IS A NEW EVENT DESCRIPTION......." +
-                "..................................................." +
-                "...................................................";
+        data.description = "As long as you're not that chick who at our last party threw up on " +
+                "our entertainment center and then kicked over our speaker into the vomit," +
+                " you're welcome to come rage with us this Friday. Free booze while supplies last." +
+                " No pets.";
+
         dataSet.add(data);
+
+        for(int i = 0; i < detailTitles.length; i++){
+            EventData detailData = new EventData();
+            detailData.detailTitles = detailTitles[i];
+            detailData.details = "Detail" + i;
+            dataSet.add(detailData);
+        }
+
 
         return dataSet;
     }

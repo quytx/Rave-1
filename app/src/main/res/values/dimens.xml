@@ -4,5 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="TextDimTop">5dp</dimen>
     <dimen name="tool_bar_top_padding">0dp</dimen>
-    <dimen name="text_edge_padding">5dp</dimen>
+    <dimen name="text_edge_padding">8dp</dimen>
+    <dimen name="view_padding">20dp</dimen>
 </resources>

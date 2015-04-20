@@ -3,14 +3,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="15dp">
+    android:paddingBottom="15dp"
+    android:layout_marginBottom="@dimen/view_padding"
+    android:background="#f0ffffff"
+    android:elevation="4dp">
 
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="200dp"
         android:id="@+id/event_detail_main_image"
         android:scaleType="centerCrop"
-        android:background="@color/primary_material_light"
         android:src="@drawable/madison_header_background"/>
 
     <LinearLayout
@@ -36,7 +38,6 @@
             android:layout_height="match_parent"
             android:id="@+id/check_mark"
             android:src="@drawable/check_mark_gray"
-            android:background="@android:color/transparent"
             android:contentDescription="Attending" />
     </LinearLayout>
 
@@ -47,6 +48,5 @@
         android:layout_marginTop="38dp"
         android:id="@+id/profile_pic"
         android:layout_gravity="center_horizontal" />
-
 
 </LinearLayout>
