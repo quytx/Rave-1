@@ -22,13 +22,13 @@ public class EventDetailAdapter extends ListBindAdapter {
 
     //TODO: Clean up hardcoding of sublists... is there a more effecient way?
     public void setEventDataSet(List<EventData> dataSet) {
-        List<EventData> headerData = dataSet.subList(0,1);
-        List<EventData> descriptionData = dataSet.subList(0, 1);
-        List<EventData> detailsData = dataSet.subList(1,dataSet.size());
+//        List<EventData> headerData = dataSet.subList(0,1);
+//        List<EventData> descriptionData = dataSet.subList(0, 1);
+//        List<EventData> detailsData = dataSet.subList(1,dataSet.size());
 
-        ((HeaderBinder) getDataBinder(0)).addAll(headerData);
-        ((EventDescriptionBinder) getDataBinder(1)).addAll(descriptionData);
-        ((EventDetailsBinder) getDataBinder(2)).addAll(detailsData);
+        ((HeaderBinder) getDataBinder(0)).addAll(dataSet);
+        ((EventDescriptionBinder) getDataBinder(1)).addAll(dataSet);
+        ((EventDetailsBinder) getDataBinder(2)).addAll(dataSet);
 
     }
 

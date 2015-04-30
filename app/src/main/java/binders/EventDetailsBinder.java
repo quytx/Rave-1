@@ -28,15 +28,18 @@ public class EventDetailsBinder extends DataBinder<EventDetailsBinder.ViewHolder
     @Override
     public ViewHolder newViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.detail_row, parent, false);
+                R.layout.event_detail_info, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void bindViewHolder(ViewHolder holder, int position) {
         EventData data = mDataSet.get(position);
-        holder.detailTitleText.setText(data.detailTitles);
-        holder.detailValueText.setText(data.details);
+        holder.dateDetailView.setText(data.details[0]);
+        holder.timeDetailView.setText(data.details[1]);
+        holder.locationDetailView.setText(data.details[2]);
+        holder.typeLocationView.setText(data.details[3]);
+
     }
 
     @Override
@@ -56,14 +59,20 @@ public class EventDetailsBinder extends DataBinder<EventDetailsBinder.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView detailTitleText;
-        TextView detailValueText;
+        TextView dateDetailView;
+        TextView timeDetailView;
+        TextView locationDetailView;
+        TextView typeLocationView;
 
 
         public ViewHolder(View view) {
             super(view);
-            detailTitleText = (TextView) view.findViewById(R.id.detail_title_text);
-            detailValueText = (TextView) view.findViewById(R.id.detail_field_text);
+            dateDetailView = (TextView) view.findViewById(R.id.date_field);
+            timeDetailView = (TextView) view.findViewById(R.id.time_field);
+            locationDetailView = (TextView) view.findViewById(R.id.location_field);
+            typeLocationView = (TextView) view.findViewById(R.id.type_field);
+
+
 
         }
     }

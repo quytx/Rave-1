@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.melnykov.fab.FloatingActionButton;
+
 
 public class EventStreamFragment extends Fragment implements AdapterView.OnItemClickListener{
 
@@ -47,6 +49,19 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
         mCardAdapter = new CardAdapter(EVENT_NAMES, EVENT_LOCATIONS);
         mCardView.setAdapter(mCardAdapter);
 
+        FloatingActionButton fab = (FloatingActionButton) parent.findViewById(R.id.fab);
+        fab.attachToRecyclerView(mCardView);
+        fab.show();
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getBaseContext(), CreateEvent.class);
+                startActivity(intent);
+            }
+        });
+
+
 
 
         final GestureDetector mGestureDetector = new GestureDetector(getActivity().getBaseContext(),
@@ -64,9 +79,9 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
                 View child = recyclerView.findChildViewUnder(motionEvent.getX(),motionEvent.getY());
                 if(child!=null && mGestureDetector.onTouchEvent(motionEvent)){
                     int position = recyclerView.getChildAdapterPosition(child);
-                    child.setAlpha((float)0.5);
-                    Toast.makeText(getActivity().getBaseContext(), "The Item Clicked is: " +
-                            position, Toast.LENGTH_SHORT).show();
+                    //TODO: when pressing back, alpha stays as 0.5
+                   // child.setAlpha((float)0.5);
+
                     Intent intent = new Intent(getActivity().getBaseContext(), EventActivity.class);
                     intent.putExtra(MainActivity.EVENT_NAME, EVENT_NAMES[position]);
                     startActivity(intent);
@@ -87,6 +102,7 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Toast.makeText(getActivity().getBaseContext(), "The Item Clicked is: " +
+                position, Toast.LENGTH_SHORT).show();
     }
 }

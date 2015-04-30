@@ -26,6 +26,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     String DRAWER_ITEMS[];
 
     //Declare Titles for Cards
+    //TODO:Limit character input for event title or else it will overflow
     String EVENT_TITLES[] = {"Event 1", "Event 2", "Event 3", "Event 4"};
 
     //Create string res for name and email in header view
@@ -130,6 +131,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                     int position = recyclerView.getChildAdapterPosition(child);
 
                     if(currItemSelected != position && position != 0) {
+                        //TODO: need to set background as selectable
                         recyclerView.getChildAt(currItemSelected).setBackgroundColor(Color.WHITE);
                         currItemSelected = position;
                         child.setBackgroundColor(Color.LTGRAY);
@@ -181,7 +183,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 

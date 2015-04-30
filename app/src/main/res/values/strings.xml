@@ -20,4 +20,11 @@
     <string name="going_button">Going</string>
     <string name="description_title">Description</string>
     <string name="details_title">Details</string>
+    <string name="date_title">Date</string>
+    <string name="time_title">Time</string>
+    <string name="location_title">Location</string>
+    <string name="type_title">Party Style</string>
+    <string name="guest_list_title">Guest List</string>
+    <string name="title_activity_create_event">CreateEvent</string>
+    <string name="title">Title</string>
 </resources>

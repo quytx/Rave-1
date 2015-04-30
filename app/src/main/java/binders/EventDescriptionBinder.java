@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.MapFragment;
 import com.rave.rave.R;
 import com.yqritc.recyclerviewmultipleviewtypesadapter.DataBindAdapter;
 import com.yqritc.recyclerviewmultipleviewtypesadapter.DataBinder;
@@ -56,6 +57,7 @@ public class EventDescriptionBinder extends DataBinder<EventDescriptionBinder.Vi
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView descriptionView;
+        MapFragment mapFragment;
 
 
         public ViewHolder(View view) {

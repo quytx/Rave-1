@@ -70,15 +70,13 @@ public class EventActivity extends ActionBarActivity {
                 " you're welcome to come rage with us this Friday. Free booze while supplies last." +
                 " No pets.";
 
-        dataSet.add(data);
 
+        data.details = new String[detailTitles.length];
         for(int i = 0; i < detailTitles.length; i++){
-            EventData detailData = new EventData();
-            detailData.detailTitles = detailTitles[i];
-            detailData.details = "Detail" + i;
-            dataSet.add(detailData);
+            data.details[i] = "Detail " + i;
         }
 
+        dataSet.add(data);
 
         return dataSet;
     }

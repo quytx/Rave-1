@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/view_padding"
-    android:background="#80ffffff"
+    android:background="#ffffff"
     android:elevation="4dp">
 
     <fragment

@@ -12,6 +12,5 @@ public class EventData {
     public int eventImage;
     public ArrayList<String> attendingListNames;
     public ArrayList<Integer> attendingListpics;
-    public String details;
-    public String detailTitles;
+    public String[] details;
 }

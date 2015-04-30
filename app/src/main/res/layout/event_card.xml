@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:clickable="true"
-            android:src="@drawable/madison_header_background" />
+            android:src="#ffffff"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_gravity="top"
