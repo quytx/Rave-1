@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/view_padding"
+    android:background="#ffffff">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/eventTitleField"
+        android:hint="Enter your event title..."/>
+
+    <AutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/secondary_text_default_material_light"
+        android:hint="Enter Location..."
+        android:id="@+id/autoCompleteLocation" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Description..."
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/eventDescriptionField" />
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter the Theme of Your Event..."
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/eventThemeField" />
+
+
+    <DatePicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/datePicker"
+        android:paddingTop="@dimen/view_padding"
+        android:paddingBottom="@dimen/view_padding"/>
+
+    <TimePicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/timePicker"
+        android:paddingTop="@dimen/view_padding"
+        android:paddingBottom="@dimen/view_padding"/>
+
+</LinearLayout>
