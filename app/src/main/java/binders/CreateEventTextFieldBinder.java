@@ -5,9 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TimePicker;
 
 import com.rave.rave.R;
 import com.yqritc.recyclerviewmultipleviewtypesadapter.DataBindAdapter;
@@ -35,7 +33,7 @@ public class CreateEventTextFieldBinder extends DataBinder<CreateEventTextFieldB
 
     @Override
     public int getItemCount() {
-        return 1;
+        return 6;
     }
 
 
@@ -45,8 +43,11 @@ public class CreateEventTextFieldBinder extends DataBinder<CreateEventTextFieldB
         EditText eventDescription;
         EditText eventTheme;
         AutoCompleteTextView eventLocation;
-        DatePicker eventDate;
-        TimePicker eventTime;
+//        DatePicker eventDate;
+//        TimePicker eventTime;
+
+        EditText eventDate;
+        EditText eventTime;
 
 
 
@@ -56,8 +57,10 @@ public class CreateEventTextFieldBinder extends DataBinder<CreateEventTextFieldB
             eventDescription = (EditText) view.findViewById(R.id.eventDescriptionField);
             eventTheme = (EditText) view.findViewById(R.id.eventThemeField);
             eventLocation = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteLocation);
-            eventDate = (DatePicker) view.findViewById(R.id.datePicker);
-            eventTime = (TimePicker) view.findViewById(R.id.timePicker);
+//            eventDate = (DatePicker) view.findViewById(R.id.datePicker);
+//            eventTime = (TimePicker) view.findViewById(R.id.timePicker);
+            eventDate = (EditText) view.findViewById(R.id.eventDateField);
+            eventTime = (EditText) view.findViewById(R.id.eventTimeField);
 
         }
     }

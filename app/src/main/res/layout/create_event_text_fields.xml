@@ -32,23 +32,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter the Theme of Your Event..."
-        android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/eventThemeField" />
 
-
-    <DatePicker
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/datePicker"
-        android:paddingTop="@dimen/view_padding"
-        android:paddingBottom="@dimen/view_padding"/>
+        android:id="@+id/eventTimeField"
+        android:hint="Select your event time..."/>
 
-    <TimePicker
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/timePicker"
-        android:paddingTop="@dimen/view_padding"
-        android:paddingBottom="@dimen/view_padding"/>
+        android:id="@+id/eventDateField"
+        android:hint="Select your event date..."/>
+
+
+
+
 
 </LinearLayout>
