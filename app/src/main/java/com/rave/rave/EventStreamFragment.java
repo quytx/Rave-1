@@ -56,7 +56,7 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity().getBaseContext(), CreateEvent.class);
+                Intent intent = new Intent(getActivity().getBaseContext(), CreateEventActivity.class);
                 startActivity(intent);
             }
         });

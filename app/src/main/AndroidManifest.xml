@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.CAMERA" android:required="true"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
     <!--
          The following two permissions are not required to use
          Google Maps Android API v2, but are recommended.
@@ -58,7 +60,7 @@
             android:value="AIzaSyDXaFMGlkqsFD_A1PQACXAIG3FDxOv_GiE" />
 
         <activity
-            android:name=".CreateEvent"
+            android:name=".CreateEventActivity"
             android:label="@string/title_activity_create_event"
             android:parentActivityName=".MainActivity" >
             <meta-data
