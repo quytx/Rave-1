@@ -1,8 +1,21 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/material_red_500</item>
+        <item name="colorPrimaryDark">@color/material_red_700</item>
+        <item name="colorAccent">@color/material_red_A100</item>
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_dark</item>
+        <item name="android:actionMenuTextColor">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
+        <item name="dropDownListViewStyle">@style/PopUpMenuListView</item>
     </style>
+
+    <style name="PopUpMenuListView" parent = "Widget.AppCompat.ListView.DropDown">
+        <item name="android:background">@color/material_red_A100</item>
+    </style>
+
 
 </resources>

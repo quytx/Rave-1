@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/view_padding"
+    android:background="#ffffff"
+    android:elevation="4dp">
+
+    <fragment
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+
+    <TextView
+        android:text="@string/description_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:textColor="@color/primary_material_dark"/>
+
+    <TextView
+        android:id="@+id/event_description"
+        android:text="Description..........................................................
+        ...................................................................................."
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="@dimen/text_edge_padding"
+        android:layout_marginLeft="@dimen/text_edge_padding"
+        android:layout_marginRight="@dimen/text_edge_padding"
+        android:layout_marginBottom="10dp"
+        android:textSize="@dimen/abc_text_size_medium_material"/>
+
+</LinearLayout>
