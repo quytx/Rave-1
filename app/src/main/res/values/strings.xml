@@ -27,4 +27,19 @@
     <string name="guest_list_title">Guest List</string>
     <string name="title_activity_create_event">CreateEvent</string>
     <string name="title">Title</string>
+    <string name="welcome_title">Welcome Title</string>
+    <string name="welcome_text">extra stuff if we want</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="user_email">email</string>
+    <string name="user_password">password</string>
+    <string name="user_name">username</string>
+    <string name="user_password_confirmation">confirm password</string>
+    <string name="register_disclaimer">disclamer</string>
+
+
 </resources>

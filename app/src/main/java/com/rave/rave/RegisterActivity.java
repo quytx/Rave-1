@@ -26,49 +26,85 @@ import java.io.IOException;
 import savage.UrlJsonAsyncTask;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class RegisterActivity extends ActionBarActivity {
 
-    private final static String LOGIN_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/sessions";
+    private final static String REGISTER_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/registrations";
     private SharedPreferences mPreferences;
     private String mUserEmail;
+    private String mUserName;
     private String mUserPassword;
+    private String mUserPasswordConfirmation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
 
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
     }
 
-    public void login(View button) {
+    public void registerNewAccount(View button) {
         EditText userEmailField = (EditText) findViewById(R.id.userEmail);
         mUserEmail = userEmailField.getText().toString();
+        EditText userNameField = (EditText) findViewById(R.id.userName);
+        mUserName = userNameField.getText().toString();
         EditText userPasswordField = (EditText) findViewById(R.id.userPassword);
         mUserPassword = userPasswordField.getText().toString();
+        EditText userPasswordConfirmationField = (EditText) findViewById(R.id.userPasswordConfirmation);
+        mUserPasswordConfirmation = userPasswordConfirmationField.getText().toString();
 
-        if (mUserEmail.length() == 0 || mUserPassword.length() == 0) {
+        if (mUserEmail.length() == 0 || mUserName.length() == 0 || mUserPassword.length() == 0 || mUserPasswordConfirmation.length() == 0) {
             // input fields are empty
             Toast.makeText(this, "Please complete all the fields",
                     Toast.LENGTH_LONG).show();
             return;
         } else {
-            LoginTask loginTask = new LoginTask(LoginActivity.this);
-            loginTask.setMessageLoading("Logging in...");
-            loginTask.execute(LOGIN_API_ENDPOINT_URL);
+            if (!mUserPassword.equals(mUserPasswordConfirmation)) {
+                // password doesn't match confirmation
+                Toast.makeText(this, "Your password doesn't match confirmation, check again",
+                        Toast.LENGTH_LONG).show();
+                return;
+            } else {
+                // everything is ok!
+                RegisterTask registerTask = new RegisterTask(RegisterActivity.this);
+                registerTask.setMessageLoading("Registering new account...");
+                registerTask.execute(REGISTER_API_ENDPOINT_URL);
+           }
         }
     }
 
 
-    private class LoginTask extends UrlJsonAsyncTask {
-        public LoginTask(Context context) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_register, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private class RegisterTask extends UrlJsonAsyncTask {
+        public RegisterTask(Context context) {
             super(context);
         }
 
         @Override
         protected JSONObject doInBackground(String... urls) {
             DefaultHttpClient client = new DefaultHttpClient();
-            HttpPost post = new HttpPost(urls[0]);   //urls[0] api/v1/sessions
+            HttpPost post = new HttpPost(urls[0]);
             JSONObject holder = new JSONObject();
             JSONObject userObj = new JSONObject();
             String response = null;
@@ -80,10 +116,12 @@ public class LoginActivity extends ActionBarActivity {
                     // something goes wrong
                     json.put("success", false);
                     json.put("info", "Something went wrong. Retry!");
-                    // add the user email and password to
-                    // the params
+
+                    // add the users's info to the post params
                     userObj.put("email", mUserEmail);
+                    userObj.put("name", mUserName);
                     userObj.put("password", mUserPassword);
+                    userObj.put("password_confirmation", mUserPasswordConfirmation);
                     holder.put("user", userObj);
                     StringEntity se = new StringEntity(holder.toString());
                     post.setEntity(se);
@@ -99,7 +137,6 @@ public class LoginActivity extends ActionBarActivity {
                 } catch (HttpResponseException e) {
                     e.printStackTrace();
                     Log.e("ClientProtocol", "" + e);
-                    json.put("info", "Email and/or password are invalid. Retry!");
                 } catch (IOException e) {
                     e.printStackTrace();
                     Log.e("IO", "" + e);
@@ -123,9 +160,6 @@ public class LoginActivity extends ActionBarActivity {
                     editor.putString("AuthToken", json.getJSONObject("data").getString("auth_token"));
                     editor.commit();
 
-
-                    String token = mPreferences.getString("AuthToken", "missing");
-                    Log.d("bimbam", token);
                     // launch the HomeActivity and close this one
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
@@ -140,26 +174,5 @@ public class LoginActivity extends ActionBarActivity {
                 super.onPostExecute(json);
             }
         }
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
