@@ -20,9 +20,9 @@ public class WelcomeActivity extends ActionBarActivity {
                     @Override
                     public void onClick(View v) {
                         // No account, load new account view
-              //          Intent intent = new Intent(WelcomeActivity.this,
-                //                RegisterActivity.class);
-                 //       startActivityForResult(intent, 0);
+                        Intent intent = new Intent(WelcomeActivity.this,
+                                RegisterActivity.class);
+                        startActivityForResult(intent, 0);
                     }
                 });
 
