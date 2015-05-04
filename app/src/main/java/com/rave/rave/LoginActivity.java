@@ -127,7 +127,7 @@ public class LoginActivity extends ActionBarActivity {
                     String token = mPreferences.getString("AuthToken", "missing");
                     Log.d("bimbam", token);
                     // launch the HomeActivity and close this one
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
                 }

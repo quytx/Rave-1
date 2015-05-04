@@ -161,7 +161,7 @@ public class RegisterActivity extends ActionBarActivity {
                     editor.commit();
 
                     // launch the HomeActivity and close this one
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
                 }
