@@ -9,8 +9,9 @@
 
     <ImageView
         android:layout_width="350dp"
-        android:layout_height="250dp"
+        android:layout_height="200dp"
         android:id="@+id/uploadImage"
+        android:scaleType="centerCrop"
         android:src="@drawable/check_mark_gray"
         android:layout_gravity="center_horizontal" />
 
