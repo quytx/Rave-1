@@ -1,6 +1,9 @@
 package com.rave.rave;
 
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -9,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,10 +21,24 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import savage.UrlJsonAsyncTask;
+
 
 public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener{
 
     private Toolbar toolbar;
+    private final static String LOGOUT_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/sessions";
+    private SharedPreferences mPreferences;
 
     //Declare Titles and Icons for Nav Drawer
     String DRAWER_ITEMS[];
@@ -58,6 +76,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
+
 
         DRAWER_ITEMS = getResources().getStringArray(R.array.drawer_items);
 
@@ -183,7 +203,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -195,7 +215,13 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+
+            Log.d("bimbang", mPreferences.getString("AuthToken", "not here"));
+
+            String fullLogoutUrl = LOGOUT_API_ENDPOINT_URL + "?auth_token=" + mPreferences.getString("AuthToken", "");
+
+            logoutFromAPI(fullLogoutUrl);
             return true;
         }
 
@@ -211,4 +237,73 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
     }
 
+    private void logoutFromAPI(String url) {
+        LogoutTask logoutTask = new LogoutTask(MainActivity.this);
+        logoutTask.setMessageLoading("Loggin out...");
+        logoutTask.execute(url);
+
+    }
+
+    private class LogoutTask extends UrlJsonAsyncTask {
+        public LogoutTask(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... urls) {
+            DefaultHttpClient client = new DefaultHttpClient();
+            HttpDelete delete = new HttpDelete(urls[0]);
+            String response = null;
+            JSONObject json = new JSONObject();
+
+            try {
+                try {
+                    json.put("success", false);
+                    json.put("info", "Something went wrong. Retry!");
+                    delete.setHeader("Accept", "application/json");
+                    delete.setHeader("Content-Type", "application/json");
+                    delete.setHeader("Authorization", "Token token="
+                            + mPreferences.getString("AuthToken", ""));
+
+                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                    response = client.execute(delete, responseHandler);
+                    json = new JSONObject(response);
+
+                } catch (HttpResponseException e) {
+                    e.printStackTrace();
+                    Log.e("ClientProtocol", "" + e);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.e("IO", "" + e);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e("JSON", "" + e);
+            }
+
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject json) {
+            try {
+                if (json.getBoolean("success")) {
+                    SharedPreferences.Editor editor = mPreferences.edit();
+                    editor.remove("AuthToken");
+                    editor.commit();
+
+                    Intent intent = new Intent(MainActivity.this,
+                            WelcomeActivity.class);
+                    startActivityForResult(intent, 0);
+                }
+                Toast.makeText(context, json.getString("info"),
+                        Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG)
+                        .show();
+            } finally {
+                super.onPostExecute(json);
+            }
+        }
+    }
 }

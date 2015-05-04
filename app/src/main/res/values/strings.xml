@@ -40,6 +40,7 @@
     <string name="user_name">username</string>
     <string name="user_password_confirmation">confirm password</string>
     <string name="register_disclaimer">disclamer</string>
+    <string name="title_activity_logout">LogoutActivity</string>
 
 
 </resources>

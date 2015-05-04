@@ -78,8 +78,8 @@ public class LoginActivity extends ActionBarActivity {
                 try {
                     // setup the returned values in case
                     // something goes wrong
-                    json.put("success", false);
-                    json.put("info", "Something went wrong. Retry!");
+//                    json.put("success", false);
+//                    json.put("info", "Something went wrong. Retry!");
                     // add the user email and password to
                     // the params
                     userObj.put("email", mUserEmail);
