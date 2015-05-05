@@ -1,5 +1,7 @@
 package Adapters;
 
+import android.graphics.Bitmap;
+
 import com.yqritc.recyclerviewmultipleviewtypesadapter.ListBindAdapter;
 
 import binders.CreateEventPictureBinder;
@@ -14,5 +16,10 @@ public class CreateEventAdapter extends ListBindAdapter{
         addAllBinder(new CreateEventPictureBinder(this),
                 new CreateEventTextFieldBinder(this));
     }
+
+    public void setImageResource(Bitmap d){
+        ((CreateEventPictureBinder) getDataBinder(0)).addImageResource(d);
+    }
+
 
 }

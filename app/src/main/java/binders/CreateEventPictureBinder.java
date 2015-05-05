@@ -1,5 +1,8 @@
 package binders;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,10 @@ import com.yqritc.recyclerviewmultipleviewtypesadapter.DataBinder;
  * Created by Jacob on 4/30/2015.
  */
 public class CreateEventPictureBinder extends DataBinder<CreateEventPictureBinder.ViewHolder> {
+    private Bitmap uploadImage = null;
+
+    Context context;
+//    final int REQUEST_IMAGE_CAPTURE = 1;
 
     public CreateEventPictureBinder(DataBindAdapter dataBindAdapter) {
         super(dataBindAdapter);
@@ -22,13 +29,36 @@ public class CreateEventPictureBinder extends DataBinder<CreateEventPictureBinde
 
     @Override
     public ViewHolder newViewHolder(ViewGroup parent) {
+        context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.create_event_pic_field, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void bindViewHolder(ViewHolder holder, int position){
+    public void bindViewHolder(final ViewHolder holder, int position){
+
+        if(uploadImage != null){
+            holder.uploadImageView.setImageBitmap(uploadImage);
+        }
+
+//        holder.selectImageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//
+//                if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
+//                    ((Activity) context).startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//                }
+//            }
+//        });
+
+    }
+
+    public void addImageResource(Bitmap newImage){
+        uploadImage = newImage;
+        notifyBinderDataSetChanged();
     }
 
     @Override
@@ -38,16 +68,33 @@ public class CreateEventPictureBinder extends DataBinder<CreateEventPictureBinde
 
 
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+
+
+
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView uploadImageView;
-        Button button;
+        Button selectImageButton;
 
 
         public ViewHolder(View view) {
             super(view);
             uploadImageView = (ImageView) view.findViewById(R.id.uploadImage);
-            button = (Button) view.findViewById(R.id.selectImageButton);
+            selectImageButton = (Button) view.findViewById(R.id.selectImageButton);
         }
+
+        public ImageView getUploadImageView(){
+            return uploadImageView;
+        }
+
+        public void setUploadImageView(Drawable d){
+            uploadImageView.setImageDrawable(d);
+            notify();
+        }
+
     }
+
+
+
 }
