@@ -199,6 +199,26 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //If not logged in, exit to WelcomeActivity
+        if(!isLoggedIn()){
+            Intent intent = new Intent(getBaseContext(), WelcomeActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    public boolean isLoggedIn(){
+        SharedPreferences mPreference = getSharedPreferences("CurrentUser", MODE_PRIVATE);
+        if(mPreference.contains("AuthToken")){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -239,7 +259,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
     private void logoutFromAPI(String url) {
         LogoutTask logoutTask = new LogoutTask(MainActivity.this);
-        logoutTask.setMessageLoading("Loggin out...");
+        logoutTask.setMessageLoading("Logging out...");
         logoutTask.execute(url);
 
     }
