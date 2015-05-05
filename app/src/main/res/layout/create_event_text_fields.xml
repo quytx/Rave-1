@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/eventTitleField"
+        android:maxLines="1"
         android:hint="Enter your event title..."/>
 
     <AutoCompleteTextView
@@ -31,6 +32,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="1"
         android:hint="Enter the Theme of Your Event..."
         android:ems="10"
         android:id="@+id/eventThemeField" />
@@ -39,14 +41,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/eventTimeField"
-        android:inputType="time"
+        android:maxLines="1"
         android:hint="Select your event time..."/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/eventDateField"
-        android:inputType="date"
+        android:maxLines="1"
         android:hint="Select your event date..."/>
 
     <Button
@@ -54,8 +56,6 @@
         android:layout_height="wrap_content"
         android:text="Submit"
         android:id="@+id/submitButton" />
-
-
 
 
 
