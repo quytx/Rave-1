@@ -11,10 +11,18 @@ import android.view.View;
 
 public class WelcomeActivity extends ActionBarActivity {
     // file: WelcomeActivity.java
+
+   // private SharedPreferences mPreferences;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+
+//        mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
+//        SharedPreferences.Editor editor = mPreferences.edit();
+//        editor.remove("AuthToken");
+//        editor.commit();
 
         if(isLoggedIn()){
             Intent intent = new Intent(getBaseContext(), MainActivity.class);

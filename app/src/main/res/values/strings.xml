@@ -41,6 +41,7 @@
     <string name="user_password_confirmation">confirm password</string>
     <string name="register_disclaimer">disclamer</string>
     <string name="title_activity_logout">LogoutActivity</string>
+    <string name="title_activity_get_event">GetEventActivity</string>
 
 
 </resources>

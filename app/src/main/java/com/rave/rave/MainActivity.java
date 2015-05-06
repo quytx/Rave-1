@@ -21,15 +21,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import savage.UrlJsonAsyncTask;
 
@@ -37,7 +45,8 @@ import savage.UrlJsonAsyncTask;
 public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener{
 
     private Toolbar toolbar;
-    private final static String LOGOUT_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/sessions";
+    private final static String LOGOUT_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/sessions/";
+    private final static String EVENTS_GET_URL = "http://madrave.herokuapp.com/api/v1/events/";
     private SharedPreferences mPreferences;
 
     //Declare Titles and Icons for Nav Drawer
@@ -62,6 +71,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     final String[] EVENT_LOCATIONS = {"123 Main St", "5026 N Woodburn", "56 N Park", "27 N Brooks",
             "West Palm Beach"};
 
+
     //Create Adapters for drawer
     RecyclerView mRecyclerView;
     NavAdapter mAdapter;
@@ -74,10 +84,12 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
-
 
         DRAWER_ITEMS = getResources().getStringArray(R.array.drawer_items);
 
@@ -184,12 +196,12 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
 
         mDrawerToggle.syncState();
-        
+
         //Create bundle for EventStreamFragment
         Bundle eventBundle = new Bundle();
         eventBundle.putStringArray(EVENT_NAME, EVENT_TITLES);
         eventBundle.putStringArray(LOCATIONS, EVENT_LOCATIONS);
-        
+
         //Set args and create fragment
         if(savedInstanceState==null) {
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -325,5 +337,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 super.onPostExecute(json);
             }
         }
+
+
+
     }
 }
