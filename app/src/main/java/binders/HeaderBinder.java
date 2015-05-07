@@ -27,6 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
 
     private List<EventData> mDataSet = new ArrayList<>();
+    private boolean checked = false;
 
     public HeaderBinder(DataBindAdapter dataBindAdapter) {
         super(dataBindAdapter);
@@ -40,11 +41,25 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
     }
 
     @Override
-    public void bindViewHolder(ViewHolder holder, int position) {
+    public void bindViewHolder(final ViewHolder holder, int position) {
         EventData data = mDataSet.get(position);
         holder.mTitleText.setText(data.eventTitle);
         holder.profilePic.setImageResource(data.profilePic);
         holder.eventImageView.setImageResource(data.eventImage);
+
+        holder.attendingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!checked) {
+                    holder.attendingButton.setImageResource(R.drawable.check_mark_green);
+                    checked = true;
+                }
+                else{
+                    holder.attendingButton.setImageResource(R.drawable.check_mark_gray);
+                    checked = false;
+                }
+            }
+        });
     }
 
     @Override

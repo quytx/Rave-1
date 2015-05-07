@@ -14,10 +14,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -28,12 +32,19 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -43,7 +54,7 @@ import savage.UrlJsonAsyncTask;
 /**
  * Created by Jacob on 5/6/2015.
  */
-public class CreateEventActivity extends ActionBarActivity {
+public class CreateEventActivity extends ActionBarActivity implements View.OnClickListener {
 
     private SharedPreferences mPreferences;
 
@@ -64,9 +75,11 @@ public class CreateEventActivity extends ActionBarActivity {
     protected String eventEndTimeText;
     protected String eventDateText;
 
+    //Header image views
     ImageView uploadImageView;
     Button selectImageButton;
 
+    //EditText Fields
     EditText eventTitle;
     EditText eventDescription;
     AutoCompleteTextView eventLocation;
@@ -75,11 +88,20 @@ public class CreateEventActivity extends ActionBarActivity {
     EditText eventStartTime;
     EditText eventEndTime;
 
+    //Button for submitting results
     Button submitButton;
 
     Calendar calendar = Calendar.getInstance();
 
     final int REQUEST_IMAGE_CAPTURE = 1;
+
+    //GooglePlace Autocomplete stuff
+    private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
+    private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
+    private static final String OUT_JSON = "/json";
+    private static final String API_KEY = "AIzaSyDXaFMGlkqsFD_A1PQACXAIG3FDxOv_GiE";
+
+    private static final String LOG_TAG = "CreateEventActivity";
 
 
 
@@ -101,6 +123,9 @@ public class CreateEventActivity extends ActionBarActivity {
         eventStartTime = (EditText) findViewById(R.id.eventStartTimeField);
         eventEndTime = (EditText) findViewById(R.id.eventEndTimeField);
         submitButton = (Button) findViewById(R.id.submitButton);
+
+        eventLocation.setAdapter(new GooglePlacesAutocompleteAdapter(this,R.layout.autocomplete_list_item));
+        eventLocation.setOnClickListener(this);
 
         picUri = null;
         setResult(RESULT_OK);
@@ -163,6 +188,112 @@ public class CreateEventActivity extends ActionBarActivity {
             }
         });
     }
+
+    public void onItemClick(AdapterView adapterView, View view, int position, long id) {
+        String str = (String) adapterView.getItemAtPosition(position);
+        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    public static ArrayList autocomplete(String input) {
+        ArrayList resultList = null;
+
+        HttpURLConnection conn = null;
+        StringBuilder jsonResults = new StringBuilder();
+        try {
+            StringBuilder sb = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
+            sb.append("?key=" + API_KEY);
+            sb.append("&components=country:us");
+            sb.append("&input=" + URLEncoder.encode(input, "utf8"));
+
+            URL url = new URL(sb.toString());
+            conn = (HttpURLConnection) url.openConnection();
+            InputStreamReader in = new InputStreamReader(conn.getInputStream());
+
+            // Load the results into a StringBuilder
+            int read;
+            char[] buff = new char[1024];
+            while ((read = in.read(buff)) != -1) {
+                jsonResults.append(buff, 0, read);
+            }
+        } catch (MalformedURLException e) {
+            Log.e(LOG_TAG, "Error processing Places API URL", e);
+            return resultList;
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error connecting to Places API", e);
+            return resultList;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+        try {
+            // Create a JSON object hierarchy from the results
+            JSONObject jsonObj = new JSONObject(jsonResults.toString());
+            JSONArray predsJsonArray = jsonObj.getJSONArray("predictions");
+
+            // Extract the Place descriptions from the results
+            resultList = new ArrayList(predsJsonArray.length());
+            for (int i = 0; i < predsJsonArray.length(); i++) {
+                System.out.println(predsJsonArray.getJSONObject(i).getString("description"));
+                System.out.println("============================================================");
+                resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
+            }
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Cannot process JSON results", e);
+        }
+
+        return resultList;
+    }
+
+    class GooglePlacesAutocompleteAdapter extends ArrayAdapter implements Filterable {
+        private ArrayList resultList;
+
+        public GooglePlacesAutocompleteAdapter(Context context, int textViewResourceId) {
+            super(context, textViewResourceId);
+        }
+
+        @Override
+        public int getCount() {
+            return resultList.size();
+        }
+
+        @Override
+        public String getItem(int index) {
+            return (String) resultList.get(index);
+        }
+
+        @Override
+        public Filter getFilter() {
+            Filter filter = new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    FilterResults filterResults = new Filter.FilterResults();
+                    if (constraint != null) {
+                        // Retrieve the autocomplete results.
+                        resultList = autocomplete(constraint.toString());
+
+                        // Assign the data to the FilterResults
+                        filterResults.values = resultList;
+                        filterResults.count = resultList.size();
+                    }
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                    if (results != null && results.count > 0) {
+                        notifyDataSetChanged();
+                    } else {
+                        notifyDataSetInvalidated();
+                    }
+                }
+            };
+            return filter;
+        }
+    }
+
+
 
 
 
@@ -310,6 +441,10 @@ public class CreateEventActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
 
 
     private class CreateEventTask extends UrlJsonAsyncTask {
@@ -336,7 +471,7 @@ public class CreateEventActivity extends ActionBarActivity {
                     // add the user email and password to
                     // the params
                     userObj.put("user_id", mPreferences.getString("UserID","none"));
-                    userObj.put("title", eventTitleText);
+                    userObj.put("name", eventTitleText);
                     userObj.put("description", eventDescriptionText);
                     userObj.put("location", eventLocationText);
                     userObj.put("start_time", eventDateText + " " + eventStartTimeText + ":00");

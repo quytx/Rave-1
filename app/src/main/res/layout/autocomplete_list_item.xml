@@ -9,7 +9,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
+        android:layout_gravity="center"
+        android:textColor="@color/abc_primary_text_material_light"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/list_item" />
+        android:id="@+id/auto_list_item"
+        android:text="Medium Text"/>
+
 </LinearLayout>
