@@ -34,8 +34,11 @@
     <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ems="10"
         android:hint="Enter Location..."
-        android:id="@+id/autoCompleteLocation" />
+        android:id="@+id/autoCompleteLocation">
+    <requestFocus />
+    </AutoCompleteTextView>
 
     <EditText
         android:layout_width="match_parent"

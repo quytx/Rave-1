@@ -78,6 +78,7 @@ public class CreateEventActivity extends ActionBarActivity implements View.OnCli
     //Header image views
     ImageView uploadImageView;
     Button selectImageButton;
+    protected String imgData;
 
     //EditText Fields
     EditText eventTitle;
@@ -99,7 +100,7 @@ public class CreateEventActivity extends ActionBarActivity implements View.OnCli
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
-    private static final String API_KEY = "AIzaSyDXaFMGlkqsFD_A1PQACXAIG3FDxOv_GiE";
+    private static final String API_KEY = "AIzaSyC4tVekkuEDLs6M_yvHUmCGjaFA0tFBLQo";
 
     private static final String LOG_TAG = "CreateEventActivity";
 
@@ -111,6 +112,7 @@ public class CreateEventActivity extends ActionBarActivity implements View.OnCli
         setContentView(R.layout.activity_create_event);
 
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
+
 
 
         uploadImageView = (ImageView) findViewById(R.id.uploadImage);
@@ -184,10 +186,18 @@ public class CreateEventActivity extends ActionBarActivity implements View.OnCli
                 eventStartTimeText = eventStartTime.getText().toString();
                 eventDateText = eventDate.getText().toString();
                 eventEndTimeText = eventEndTime.getText().toString();
+                if(picUri != null) {
+                    imgData = ImgEncode.encodeImage(picUri.getPath());
+                }
                 submitNewEvent(CREATE_EVENT_API_ENDPOINT_URL);
+
+//                else{
+//               //     Toast.makeText(getParent(), "Add a photo!", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
     }
+
 
     public void onItemClick(AdapterView adapterView, View view, int position, long id) {
         String str = (String) adapterView.getItemAtPosition(position);
@@ -476,8 +486,14 @@ public class CreateEventActivity extends ActionBarActivity implements View.OnCli
                     userObj.put("location", eventLocationText);
                     userObj.put("start_time", eventDateText + " " + eventStartTimeText + ":00");
                     userObj.put("end_time", eventDateText + " " + eventEndTimeText + ":00");
-
                     holder.put("event", userObj);
+
+                    if(imgData !=null){
+                        JSONObject photoObj = new JSONObject();
+                        photoObj.put("imgBase64", imgData);
+                        holder.put("photo", photoObj);
+                    }
+
                     StringEntity se = new StringEntity(holder.toString());
                     post.setEntity(se);
 
@@ -519,6 +535,10 @@ public class CreateEventActivity extends ActionBarActivity implements View.OnCli
 //
 //                    String token = mPreferences.getString("AuthToken", "missing");
 //                    Log.d("bimbam", token);
+                    //Reset pic data
+                    picUri = null;
+                    imgData = null;
+
                     // launch the HomeActivity and close this one
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
