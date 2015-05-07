@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,6 +16,10 @@ import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class EventStreamFragment extends Fragment implements AdapterView.OnItemClickListener{
 
@@ -23,11 +28,12 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
     RecyclerView.Adapter mCardAdapter;
     RecyclerView.LayoutManager mLayoutManager;
 
-    String[] EVENT_NAMES = {""};
-    String[] EVENT_LOCATIONS = {""};
+    String[] EVENT_NAMES;
+    String[] EVENT_LOCATIONS;
 
-
-
+    String EVENTS = "";
+    JSONArray array;
+    JSONObject recs;
 
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,8 +41,23 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
 
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            EVENT_NAMES = bundle.getStringArray(MainActivity.EVENT_NAME);
-            EVENT_LOCATIONS = bundle.getStringArray(MainActivity.LOCATIONS);
+
+            EVENTS = bundle.getString(MainActivity.EVENTS);
+            try {
+                array = new JSONArray(EVENTS);
+                Log.d("bam", array.toString());
+                Log.d("bam"," " + array.length());
+                EVENT_NAMES = new String[array.length()];
+                EVENT_LOCATIONS = new String[array.length()];
+
+                for (int i = 0; i < array.length(); i++) {
+                    recs = array.getJSONObject(i);
+                    EVENT_NAMES[i] = recs.getString("name");
+                    EVENT_LOCATIONS[i] = recs.getString("location");
+                }
+            } catch (JSONException e) {
+                Log.d("bam", "error with event array");
+            }
         }
 
 
@@ -45,6 +66,8 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
 
         mLayoutManager = new LinearLayoutManager(parent.getContext());
         mCardView.setLayoutManager(mLayoutManager);
+
+
 
         mCardAdapter = new CardAdapter(EVENT_NAMES, EVENT_LOCATIONS);
         mCardView.setAdapter(mCardAdapter);
@@ -82,8 +105,13 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
                     //TODO: when pressing back, alpha stays as 0.5
                    // child.setAlpha((float)0.5);
 
+
+
                     Intent intent = new Intent(getActivity().getBaseContext(), EventActivity.class);
+
+                    intent.putExtra("jsonArray", EVENTS);
                     intent.putExtra(MainActivity.EVENT_NAME, EVENT_NAMES[position]);
+
                     startActivity(intent);
                     return true;
                 }

@@ -74,6 +74,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     final String[] EVENT_LOCATIONS = {"123 Main St", "5026 N Woodburn", "56 N Park", "27 N Brooks",
             "West Palm Beach"};
 
+    final static String EVENTS = "Event Info";
+
     //Create Adapters for drawer
     RecyclerView mRecyclerView;
     NavAdapter mAdapter;
@@ -85,6 +87,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     ActionBarDrawerToggle mDrawerToggle;
 
     JSONArray events;
+    Bundle eventBundle = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +96,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
 
 
-        new HttpAsyncTask().execute(EVENTS_API_ENDPOINT_URL);
+
 
 
         DRAWER_ITEMS = getResources().getStringArray(R.array.drawer_items);
@@ -167,7 +170,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
                     int position = recyclerView.getChildAdapterPosition(child);
 
-                    if(currItemSelected != position && position != 0) {
+                    if (currItemSelected != position && position != 0) {
                         //TODO: need to set background as selectable
                         recyclerView.getChildAt(currItemSelected).setBackgroundColor(Color.WHITE);
                         currItemSelected = position;
@@ -203,16 +206,15 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         mDrawerToggle.syncState();
         
         //Create bundle for EventStreamFragment
-        Bundle eventBundle = new Bundle();
-        eventBundle.putStringArray(EVENT_NAME, EVENT_TITLES);
-        eventBundle.putStringArray(LOCATIONS, EVENT_LOCATIONS);
+
+
+
+
         
         //Set args and create fragment
         if(savedInstanceState==null) {
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            EventStreamFragment eventStreamFragment = new EventStreamFragment();
-            eventStreamFragment.setArguments(eventBundle);
-            fragmentTransaction.add(R.id.fragmentContainer, eventStreamFragment).commit();
+            new HttpAsyncTask().execute(EVENTS_API_ENDPOINT_URL);
+
         }
     }
 
@@ -361,6 +363,15 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 }
             }
 
+            Log.d("boom", "events: " + events.toString());
+            eventBundle.putStringArray(EVENT_NAME, EVENT_TITLES);
+            eventBundle.putStringArray(LOCATIONS, EVENT_LOCATIONS);
+            eventBundle.putString(EVENTS, events.toString());
+
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            EventStreamFragment eventStreamFragment = new EventStreamFragment();
+            eventStreamFragment.setArguments(eventBundle);
+            fragmentTransaction.add(R.id.fragmentContainer, eventStreamFragment).commit();
             return "yay!";
         }
         // onPostExecute displays the results of the AsyncTask.

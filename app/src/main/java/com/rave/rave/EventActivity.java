@@ -5,9 +5,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +33,10 @@ public class EventActivity extends ActionBarActivity {
 
     private String mEventTitle;
     private TextView textView;
+    private String events;
+    private JSONArray array;
+    private JSONObject rec;
+    private String name;
 
     private String[] detailTitles = {"Date", "Time", "Location", "Type"};
 
@@ -42,6 +51,30 @@ public class EventActivity extends ActionBarActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mEventTitle = getIntent().getStringExtra(MainActivity.EVENT_NAME);
+
+        events = getIntent().getStringExtra(MainActivity.EVENTS);
+
+        try {
+            array = new JSONArray(events);
+        } catch (JSONException e) {
+            Log.d("bam", "error with event array");
+        }
+
+        for (int i = 0; i < array.length(); ++i) {
+            try {
+                rec = array.getJSONObject(i);
+            } catch (Exception e) {
+                Log.d("bam", "error with event array");
+            }
+            try {
+                name = rec.getString("name");
+            } catch (Exception e){
+                Log.d("bam", "name of event" + name);
+            }
+            // ...
+        }
+        Log.d("success", array.toString());
+
 
         eventDetailAdapter.setEventDataSet(getEventData());
 
