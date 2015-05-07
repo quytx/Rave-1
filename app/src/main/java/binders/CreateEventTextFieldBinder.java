@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.rave.rave.R;
 import com.yqritc.recyclerviewmultipleviewtypesadapter.DataBindAdapter;
@@ -30,6 +30,15 @@ public class CreateEventTextFieldBinder extends DataBinder<CreateEventTextFieldB
     public Context context;
     Calendar calendar = Calendar.getInstance();
 
+    String eventTitleText = "";
+    String eventDescriptionText = "";
+    String eventThemeText = "";
+    String eventLocationText ="";
+
+    String eventDateText = "";
+    String eventTimeText = "";
+
+
     public CreateEventTextFieldBinder(DataBindAdapter dataBindAdapter) {
         super(dataBindAdapter);
     }
@@ -44,6 +53,14 @@ public class CreateEventTextFieldBinder extends DataBinder<CreateEventTextFieldB
 
     @Override
     public void bindViewHolder(final ViewHolder holder, int position) {
+        eventTitleText = holder.eventTitle.getText().toString();
+        eventDescriptionText = holder.eventDescription.getText().toString();
+        eventThemeText = holder.eventTheme.getText().toString();
+        eventLocationText = holder.eventLocation.getText().toString();
+
+        eventDateText = holder.eventDate.getText().toString();
+        eventTimeText = holder.eventTime.getText().toString();
+
 
         //Create pop-up dialog for date selector
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -108,7 +125,7 @@ public class CreateEventTextFieldBinder extends DataBinder<CreateEventTextFieldB
         holder.doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Submit!", Toast.LENGTH_SHORT);
+                Log.d("CreateEventTextField", "Submit button clicked");
             }
         });
     }
@@ -118,6 +135,21 @@ public class CreateEventTextFieldBinder extends DataBinder<CreateEventTextFieldB
     public int getItemCount() {
         return 1;
     }
+
+    public String getEventTitleText(){return eventTitleText;}
+
+    public String getEventDescriptionText() {return eventDescriptionText;}
+
+    public String getEventThemeText(){return eventThemeText;}
+
+    public String getEventTimeText(){return eventTimeText;}
+
+    public String getEventDateText() { return eventDateText;}
+
+
+    public String getEventLocationText() {return eventLocationText;}
+
+
 
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -142,10 +174,12 @@ public class CreateEventTextFieldBinder extends DataBinder<CreateEventTextFieldB
             eventTheme = (EditText) view.findViewById(R.id.eventThemeField);
             eventLocation = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteLocation);
             eventDate = (EditText) view.findViewById(R.id.eventDateField);
-            eventTime = (EditText) view.findViewById(R.id.eventTimeField);
+            eventTime = (EditText) view.findViewById(R.id.eventStartTimeField);
             doneButton = (Button) view.findViewById(R.id.submitButton);
 
         }
 
     }
+
+
 }

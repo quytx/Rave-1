@@ -40,9 +40,16 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/eventTimeField"
+        android:id="@+id/eventStartTimeField"
         android:maxLines="1"
-        android:hint="Select your event time..."/>
+        android:hint="Select your event start time..."/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/eventEndTimeField"
+        android:maxLines="1"
+        android:hint="Select your event end time..."/>
 
     <EditText
         android:layout_width="match_parent"

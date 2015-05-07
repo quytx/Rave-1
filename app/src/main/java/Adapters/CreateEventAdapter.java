@@ -21,5 +21,17 @@ public class CreateEventAdapter extends ListBindAdapter{
         ((CreateEventPictureBinder) getDataBinder(0)).addImageResource(d);
     }
 
+    public String getEventTitleText(){return ((CreateEventTextFieldBinder) getDataBinder(1)).getEventTitleText();}
+
+    public String getEventDescriptionText() {return ((CreateEventTextFieldBinder) getDataBinder(1)).getEventDescriptionText();}
+
+    public String getEventThemeText(){return ((CreateEventTextFieldBinder) getDataBinder(1)).getEventThemeText();}
+
+    public String getEventTimeText(){return ((CreateEventTextFieldBinder) getDataBinder(1)).getEventTimeText();}
+
+    public String getEventDateText() { return ((CreateEventTextFieldBinder) getDataBinder(1)).getEventDateText();}
+
+
+    public String getEventLocationText() {return ((CreateEventTextFieldBinder) getDataBinder(1)).getEventLocationText();}
 
 }

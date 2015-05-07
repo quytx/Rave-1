@@ -211,8 +211,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     }
 
     public boolean isLoggedIn(){
-        SharedPreferences mPreference = getSharedPreferences("CurrentUser", MODE_PRIVATE);
-        if(mPreference.contains("AuthToken")){
+        mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
+        if(mPreferences.contains("AuthToken")){
             return true;
         }
         else{
@@ -310,6 +310,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 if (json.getBoolean("success")) {
                     SharedPreferences.Editor editor = mPreferences.edit();
                     editor.remove("AuthToken");
+                    editor.remove("UserID");
                     editor.commit();
 
                     Intent intent = new Intent(MainActivity.this,

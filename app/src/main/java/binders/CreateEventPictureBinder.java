@@ -42,18 +42,6 @@ public class CreateEventPictureBinder extends DataBinder<CreateEventPictureBinde
             holder.uploadImageView.setImageBitmap(uploadImage);
         }
 
-//        holder.selectImageButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//
-//                if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
-//                    ((Activity) context).startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//                }
-//            }
-//        });
-
     }
 
     public void addImageResource(Bitmap newImage){
@@ -65,10 +53,6 @@ public class CreateEventPictureBinder extends DataBinder<CreateEventPictureBinde
     public int getItemCount() {
         return 1;
     }
-
-
-
-
 
 
 

@@ -10,10 +10,69 @@
         layout="@layout/tool_bar">
     </include>
 
-    <RecyclerView
+    <ImageView
+        android:layout_width="350dp"
+        android:layout_height="180dp"
+        android:id="@+id/uploadImage"
+        android:scaleType="centerCrop"
+        android:src="@drawable/check_mark_gray"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Image"
+        android:id="@+id/selectImageButton" />
+
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/RecyclerView" />
+        android:id="@+id/eventTitleField"
+        android:maxLines="1"
+        android:hint="Enter your event title..."/>
+
+    <AutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Location..."
+        android:id="@+id/autoCompleteLocation" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Description..."
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:ems="10"
+        android:id="@+id/eventDescriptionField" />
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/eventStartTimeField"
+        android:maxLines="1"
+        android:hint="Select your event start time..."/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/eventEndTimeField"
+        android:maxLines="1"
+        android:hint="Select your event end time..."/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/eventDateField"
+        android:maxLines="1"
+        android:hint="Select your event date..."/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:id="@+id/submitButton" />
 
 
 </LinearLayout>

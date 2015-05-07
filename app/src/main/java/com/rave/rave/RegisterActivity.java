@@ -158,6 +158,7 @@ public class RegisterActivity extends ActionBarActivity {
                     // save the returned auth_token into
                     // the SharedPreferences
                     editor.putString("AuthToken", json.getJSONObject("data").getString("auth_token"));
+                    editor.putString("UserID", json.getJSONObject("data").getString("user_id"));
                     editor.commit();
 
                     // launch the HomeActivity and close this one
