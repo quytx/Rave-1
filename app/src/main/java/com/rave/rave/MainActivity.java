@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -21,15 +22,25 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import savage.UrlJsonAsyncTask;
 
@@ -38,6 +49,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
     private Toolbar toolbar;
     private final static String LOGOUT_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/sessions";
+    private final static String EVENTS_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/events.json";
     private SharedPreferences mPreferences;
 
     //Declare Titles and Icons for Nav Drawer
@@ -72,11 +84,16 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
     ActionBarDrawerToggle mDrawerToggle;
 
+    JSONArray events;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
+
+
+        new HttpAsyncTask().execute(EVENTS_API_ENDPOINT_URL);
 
 
         DRAWER_ITEMS = getResources().getStringArray(R.array.drawer_items);
@@ -327,4 +344,52 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             }
         }
     }
+
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            String json = GET(urls[0]);
+
+            for(int n = 0; n < events.length(); n++)
+            {
+                try {
+                    JSONObject object = events.getJSONObject(n);
+                    Log.d("bangbam", "json object" + n + object);
+                } catch (Exception e){
+                Log.d("bambam", "error storing json object");
+                }
+            }
+
+            return "yay!";
+        }
+        // onPostExecute displays the results of the AsyncTask.
+//        @Override
+//        protected void onPostExecute(String result) {
+//            Toast.makeText(getBaseContext(), "Received!" + result, Toast.LENGTH_LONG).show();
+//        }
+    }
+
+    public String GET(String url){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+
+            // create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // make GET request to the given URL
+            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+            String json_string = EntityUtils.toString(httpResponse.getEntity());
+            events = new JSONArray(json_string);
+
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        return result;
+    }
+
 }

@@ -336,7 +336,7 @@ public class CreateEventActivity extends ActionBarActivity {
                     // add the user email and password to
                     // the params
                     userObj.put("user_id", mPreferences.getString("UserID","none"));
-                    userObj.put("title", eventTitleText);
+                    userObj.put("name", eventTitleText);
                     userObj.put("description", eventDescriptionText);
                     userObj.put("location", eventLocationText);
                     userObj.put("start_time", eventDateText + " " + eventStartTimeText + ":00");
