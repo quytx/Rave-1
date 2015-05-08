@@ -50,7 +50,7 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
     }
 
     @Override
-    public void bindViewHolder(final ViewHolder holder, int position) {
+    public void bindViewHolder(final ViewHolder holder, final int position) {
 
         EventData data = mDataSet.get(position);
         holder.mTitleText.setText(data.eventTitle);

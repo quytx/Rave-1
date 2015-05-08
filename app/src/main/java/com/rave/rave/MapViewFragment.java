@@ -1,5 +1,7 @@
 package com.rave.rave;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +13,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 public class MapViewFragment extends Fragment {
 
@@ -65,6 +69,7 @@ public class MapViewFragment extends Fragment {
         // For dropping a marker at a point on the Map
         mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("My Home").snippet("Home Address"));
         // For zooming automatically to the Dropped PIN Location
+        //mMap.addMarker(new MarkerOptions().position())
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,
                 longitude), 12.0f));
     }
@@ -97,4 +102,5 @@ public class MapViewFragment extends Fragment {
             mMap = null;
         }
     }
+
 }
