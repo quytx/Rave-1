@@ -36,9 +36,6 @@ public class EventDetailsBinder extends DataBinder<EventDetailsBinder.ViewHolder
     @Override
     public void bindViewHolder(ViewHolder holder, int position) {
         EventData data = mDataSet.get(position);
-
-
-
         holder.startTime.setText(data.startTime);
         holder.endTime.setText(data.endTime);
         holder.location.setText(data.location);

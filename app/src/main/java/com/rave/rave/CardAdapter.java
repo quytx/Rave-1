@@ -23,6 +23,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     private String[] event_photos;
     private String[] event_ids;
 
+
     public CardAdapter(String[] event_titles, String[] event_addresses, String[] event_ids, String[] event_photos) {
         this.event_titles = event_titles;
         this.event_addresses = event_addresses;
@@ -45,7 +46,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             addressTextView = (TextView) itemView.findViewById(R.id.event_address_text);
             //imageView = (ImageView) itemView.findViewById(R.id.event_image);
             task = new DownloadImageTask((ImageView) itemView.findViewById(R.id.event_image));
-
         }
     }
 
@@ -63,7 +63,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         holder.addressTextView.setText(event_addresses[position]);
         holder.event_id = event_ids[position];
         holder.task.execute(event_photos[position]);
-
     }
 
     @Override

@@ -147,4 +147,5 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
         Toast.makeText(getActivity().getBaseContext(), "The Item Clicked is: " +
                 position, Toast.LENGTH_SHORT).show();
     }
+
 }

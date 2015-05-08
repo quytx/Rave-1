@@ -33,6 +33,8 @@ public class EventDescriptionBinder extends DataBinder<EventDescriptionBinder.Vi
     Context mContext;
     Activity callingActivity;
     FragmentManager fragmentManager;
+    private LatLng latLng;
+    private String eventTitle;
 
     public EventDescriptionBinder(DataBindAdapter dataBindAdapter) {
         super(dataBindAdapter);
@@ -51,6 +53,8 @@ public class EventDescriptionBinder extends DataBinder<EventDescriptionBinder.Vi
     @Override
     public void bindViewHolder(ViewHolder holder, int position) {
         EventData data = mDataSet.get(position);
+        latLng = data.latLng;
+        eventTitle = data.eventTitle;
         holder.descriptionView.setText(data.description);
         holder.mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.map);
         holder.mapFragment.getMapAsync(this);
@@ -74,11 +78,10 @@ public class EventDescriptionBinder extends DataBinder<EventDescriptionBinder.Vi
     @Override
     public void onMapReady(GoogleMap map) {
         CameraUpdate center=
-                CameraUpdateFactory.newLatLng(new LatLng(43.0691100,
-                        -89.4010630));
+                CameraUpdateFactory.newLatLng(latLng);
         CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
-        map.addMarker(new MarkerOptions().position(new LatLng(43.0691100, -89.4010630))
-                .title("Party ova here"));
+        map.addMarker(new MarkerOptions().position(latLng)
+                .title(eventTitle));
                 map.moveCamera(center);
         map.animateCamera(zoom);
     }
