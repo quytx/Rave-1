@@ -84,7 +84,7 @@ public class EventActivity extends ActionBarActivity {
 
         try {
             data.eventTitle = ourEvent.getString("name");
-            data.eventImage = R.drawable.madison_header_background;
+            data.eventImage = ourEvent.getString("cover_photo");
             data.profilePic = R.drawable.profile_pic_example;
             data.description = ourEvent.getString("description");
         } catch (Exception e){
