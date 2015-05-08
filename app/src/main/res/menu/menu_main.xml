@@ -8,7 +8,8 @@
 
     <item android:id="@+id/action_map_view"
         android:title="Show Map"
-        android:icon="@drawable/maps_icon"
+
         app:showAsAction="ifRoom"
         android:orderInCategory="100" />
 </menu>
+

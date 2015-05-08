@@ -8,9 +8,6 @@
     <string-array name="drawer_items">
         <item>Event Stream</item>
         <item>Itinerary</item>
-        <item>Friends</item>
-        <item>Favorites</item>
-        <item>Night Recaps</item>
         <item>My Events</item>
     </string-array>
 

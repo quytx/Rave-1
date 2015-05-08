@@ -122,6 +122,8 @@ public class LoginActivity extends ActionBarActivity {
                     // the SharedPreferences
                     editor.putString("AuthToken", json.getJSONObject("data").getString("auth_token"));
                     editor.putString("UserID", json.getJSONObject("data").getString("user_id"));
+                    editor.putString("UserName", json.getJSONObject("data").getString("user_name"));
+                    editor.putString("UserEmail", json.getJSONObject("data").getString("user_email"));
                     editor.commit();
 
 

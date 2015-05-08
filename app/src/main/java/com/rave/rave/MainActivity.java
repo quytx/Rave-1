@@ -60,6 +60,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     private Toolbar toolbar;
     private final static String LOGOUT_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/sessions";
     private final static String EVENTS_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/events.json";
+    private final static String MY_EVENTS_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/myevents.json";
+
     private SharedPreferences mPreferences;
 
     //Declare Titles and Icons for Nav Drawer
@@ -110,6 +112,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
 
         DRAWER_ITEMS = getResources().getStringArray(R.array.drawer_items);
+        NAME = mPreferences.getString("UserName","Anonymous");
+        EMAIL = mPreferences.getString("UserEmail","user@example.com");
 
         int ICONS[] = {R.drawable.event_stream_icon,R.drawable.itinerary_icon,
                 R.drawable.friends_icon,
@@ -192,6 +196,9 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
 
                     drawerLayout.closeDrawers();
+
+                   // new HttpAsyncTask().execute(MY_EVENTS_API_ENDPOINT_URL);
+
                     return true;
                 }
                 return false;
@@ -436,8 +443,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         protected String doInBackground(String... urls) {
 
             String json = GET(urls[0]);
-
-
 
             for(int n = 0; n < events.length(); n++)
             {
