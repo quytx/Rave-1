@@ -1,13 +1,10 @@
 package com.rave.rave;
 
-import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -33,13 +30,13 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import savage.UrlJsonAsyncTask;
 
@@ -49,9 +46,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     private Toolbar toolbar;
     private final static String LOGOUT_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/sessions";
     private final static String EVENTS_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/events.json";
-
-    private String newData = "";
-
     private SharedPreferences mPreferences;
 
     //Declare Titles and Icons for Nav Drawer
@@ -76,6 +70,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     final String[] EVENT_LOCATIONS = {"123 Main St", "5026 N Woodburn", "56 N Park", "27 N Brooks",
             "West Palm Beach"};
 
+    final static String EVENTS = "Event Info";
+
     //Create Adapters for drawer
     RecyclerView mRecyclerView;
     NavAdapter mAdapter;
@@ -86,13 +82,19 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
     ActionBarDrawerToggle mDrawerToggle;
 
+    JSONArray events;
+    final static String eventActivity = "";
+    Bundle eventBundle = new Bundle();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
 
-        new HttpAsyncTask().execute("http://madrave.herokuapp.com/api/v1/events.json");
+
+
+
 
         DRAWER_ITEMS = getResources().getStringArray(R.array.drawer_items);
 
@@ -165,7 +167,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
                     int position = recyclerView.getChildAdapterPosition(child);
 
-                    if(currItemSelected != position && position != 0) {
+                    if (currItemSelected != position && position != 0) {
                         //TODO: need to set background as selectable
                         recyclerView.getChildAt(currItemSelected).setBackgroundColor(Color.WHITE);
                         currItemSelected = position;
@@ -199,18 +201,17 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
 
         mDrawerToggle.syncState();
-        
+
         //Create bundle for EventStreamFragment
-        Bundle eventBundle = new Bundle();
-        eventBundle.putStringArray(EVENT_NAME, EVENT_TITLES);
-        eventBundle.putStringArray(LOCATIONS, EVENT_LOCATIONS);
-        
+
+
+
+
+
         //Set args and create fragment
         if(savedInstanceState==null) {
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            EventStreamFragment eventStreamFragment = new EventStreamFragment();
-            eventStreamFragment.setArguments(eventBundle);
-            fragmentTransaction.add(R.id.fragmentContainer, eventStreamFragment).commit();
+            new HttpAsyncTask().execute(EVENTS_API_ENDPOINT_URL);
+
         }
     }
 
@@ -343,62 +344,60 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         }
     }
 
-
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException{
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-
-    }
-
-    public boolean isConnected(){
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected())
-            return true;
-        else
-            return false;
-    }
-
     private class HttpAsyncTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
-            InputStream inputStream = null;
-            String result = "";
-            try {
 
-                // create HttpClient
-                HttpClient httpclient = new DefaultHttpClient();
+            String json = GET(urls[0]);
 
-                // make GET request to the given URL
-                HttpResponse httpResponse = httpclient.execute(new HttpGet(EVENTS_API_ENDPOINT_URL));
-
-                // receive response as inputStream
-                inputStream = httpResponse.getEntity().getContent();
-
-                // convert inputstream to string
-                if(inputStream != null)
-                    result = convertInputStreamToString(inputStream);
-                else
-                    result = "Did not work!";
-
-            } catch (Exception e) {
-                Log.d("InputStream", e.getLocalizedMessage());
+            for(int n = 0; n < events.length(); n++)
+            {
+                try {
+                    JSONObject object = events.getJSONObject(n);
+                    Log.d("bangbam", "json object" + n + object);
+                } catch (Exception e){
+                    Log.d("bambam", "error storing json object");
+                }
             }
 
-            Log.d("result", result);
-            newData = result;
-            return result;
+            Log.d("boom", "events: " + events.toString());
+            eventBundle.putStringArray(EVENT_NAME, EVENT_TITLES);
+            eventBundle.putStringArray(LOCATIONS, EVENT_LOCATIONS);
+            eventBundle.putString(EVENTS, events.toString());
+
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            EventStreamFragment eventStreamFragment = new EventStreamFragment();
+            eventStreamFragment.setArguments(eventBundle);
+            fragmentTransaction.add(R.id.fragmentContainer, eventStreamFragment).commit();
+            return "yay!";
         }
         // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            Toast.makeText(getBaseContext(), "Received!", Toast.LENGTH_LONG).show();
-        }
+//        @Override
+//        protected void onPostExecute(String result) {
+//            Toast.makeText(getBaseContext(), "Received!" + result, Toast.LENGTH_LONG).show();
+//        }
     }
+
+    public String GET(String url){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+
+            // create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // make GET request to the given URL
+            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+            String json_string = EntityUtils.toString(httpResponse.getEntity());
+            events = new JSONArray(json_string);
+
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        return result;
+    }
+
 }

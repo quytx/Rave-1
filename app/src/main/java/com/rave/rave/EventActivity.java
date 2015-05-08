@@ -5,9 +5,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +33,11 @@ public class EventActivity extends ActionBarActivity {
 
     private String mEventTitle;
     private TextView textView;
+    private String events;
+    private JSONArray array;
+    private JSONObject rec;
+    private String name;
+    private JSONObject ourEvent;
 
     private String[] detailTitles = {"Date", "Time", "Location", "Type"};
 
@@ -42,6 +52,16 @@ public class EventActivity extends ActionBarActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mEventTitle = getIntent().getStringExtra(MainActivity.EVENT_NAME);
+
+        events = getIntent().getStringExtra(MainActivity.eventActivity);
+
+        try {
+            ourEvent = new JSONObject(events);
+        } catch (JSONException e) {
+            Log.d("bam", "error with event array");
+        }
+
+
 
         eventDetailAdapter.setEventDataSet(getEventData());
 
@@ -60,15 +80,16 @@ public class EventActivity extends ActionBarActivity {
 
         EventData data = new EventData();
 
-    //      int detailListSize = data.detailTitles.length;
+        //      int detailListSize = data.detailTitles.length;
 
-        data.eventTitle = mEventTitle;
-        data.eventImage = R.drawable.madison_header_background;
-        data.profilePic = R.drawable.profile_pic_example;
-        data.description = "As long as you're not that chick who at our last party threw up on " +
-                "our entertainment center and then kicked over our speaker into the vomit," +
-                " you're welcome to come rage with us this Friday. Free booze while supplies last." +
-                " No pets.";
+        try {
+            data.eventTitle = ourEvent.getString("name");
+            data.eventImage = R.drawable.madison_header_background;
+            data.profilePic = R.drawable.profile_pic_example;
+            data.description = ourEvent.getString("description");
+        } catch (Exception e){
+            Log.d("bam", "error with adding data");
+        }
 
 
         data.details = new String[detailTitles.length];
