@@ -54,11 +54,20 @@ public class EventDescriptionBinder extends DataBinder<EventDescriptionBinder.Vi
     public void bindViewHolder(ViewHolder holder, int position) {
         EventData data = mDataSet.get(position);
         latLng = data.latLng;
+//        if(latLng == null){
+//            latLng = resolveLatLng(data);
+//        }
         eventTitle = data.eventTitle;
         holder.descriptionView.setText(data.description);
         holder.mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.map);
         holder.mapFragment.getMapAsync(this);
     }
+
+//    private LatLng resolveLatLng(EventData data) {
+//
+//        return getLocationFromAddress(data.location);
+//    }
+
 
     @Override
     public int getItemCount() {
@@ -77,13 +86,15 @@ public class EventDescriptionBinder extends DataBinder<EventDescriptionBinder.Vi
 
     @Override
     public void onMapReady(GoogleMap map) {
-        CameraUpdate center=
-                CameraUpdateFactory.newLatLng(latLng);
-        CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
-        map.addMarker(new MarkerOptions().position(latLng)
-                .title(eventTitle));
-                map.moveCamera(center);
-        map.animateCamera(zoom);
+        if(latLng != null) {
+            CameraUpdate center =
+                    CameraUpdateFactory.newLatLng(latLng);
+            CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+            map.addMarker(new MarkerOptions().position(latLng)
+                    .title(eventTitle));
+            map.moveCamera(center);
+            map.animateCamera(zoom);
+        }
     }
 
 
