@@ -140,7 +140,7 @@ public class UrlJsonAsyncTask extends AsyncTask<String, Void, JSONObject> {
         return messageLoading;
     }
 
-    public void setMessageLoading(String messageLoading) {
+    public static void setMessageLoading(String messageLoading) {
         this.messageLoading = messageLoading;
     }
 

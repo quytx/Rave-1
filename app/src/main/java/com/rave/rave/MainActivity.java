@@ -361,8 +361,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             }
 
             Log.d("boom", "events: " + events.toString());
-            eventBundle.putStringArray(EVENT_NAME, EVENT_TITLES);
-            eventBundle.putStringArray(LOCATIONS, EVENT_LOCATIONS);
+
             eventBundle.putString(EVENTS, events.toString());
 
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

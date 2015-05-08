@@ -10,6 +10,8 @@ public class EventData {
     public String description;
     public int profilePic;
     public int eventImage;
+    public String eventID;
+    public String pictureURL;
     public ArrayList<String> attendingListNames;
     public ArrayList<Integer> attendingListpics;
     public String[] details;

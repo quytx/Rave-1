@@ -14,16 +14,22 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     private String[] event_titles;
     private String[] event_addresses;
+    private String[] event_ids;
+    private String[] event_picture_url;
 
-    public CardAdapter(String[] event_titles, String[] event_addresses) {
+    public CardAdapter(String[] event_titles, String[] event_addresses, String[] event_ids, String[] event_picture_url) {
         this.event_titles = event_titles;
         this.event_addresses = event_addresses;
+        this.event_ids = event_ids;
+        this.event_picture_url = event_picture_url;
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
         TextView addressTextView;
         ImageView imageView;
+        String event_id;
 
 
         public ViewHolder(View itemView) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
@@ -48,6 +54,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         holder.titleTextView.setText(event_titles[position]);
         holder.addressTextView.setText(event_addresses[position]);
         holder.imageView.setImageResource(R.drawable.madison_header_background);
+        holder.event_id = event_ids[position];
     }
 
     @Override
