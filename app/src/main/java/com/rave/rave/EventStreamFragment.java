@@ -32,6 +32,7 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
     String[] EVENT_LOCATIONS;
     String[] EVENT_PHOTOS;
     String[] EVENT_IDS;
+    //Wrk
 
     String EVENTS = "";
     JSONArray array;
