@@ -110,6 +110,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
 
         DRAWER_ITEMS = getResources().getStringArray(R.array.drawer_items);
+        NAME = mPreferences.getString("UserName","Anonymous");
+        EMAIL = mPreferences.getString("UserEmail","user@example.com");
 
         int ICONS[] = {R.drawable.event_stream_icon,R.drawable.itinerary_icon,
                 R.drawable.friends_icon,
