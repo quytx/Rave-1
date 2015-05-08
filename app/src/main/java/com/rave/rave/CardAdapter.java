@@ -37,6 +37,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         //ImageView imageView;
         DownloadImageTask task;
         String event_id;
+        private boolean bmImageIsSet;
+
 
 
         public ViewHolder(View itemView) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
@@ -46,6 +48,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             addressTextView = (TextView) itemView.findViewById(R.id.event_address_text);
             //imageView = (ImageView) itemView.findViewById(R.id.event_image);
             task = new DownloadImageTask((ImageView) itemView.findViewById(R.id.event_image));
+            bmImageIsSet = false;
         }
     }
 
@@ -62,7 +65,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         holder.titleTextView.setText(event_titles[position]);
         holder.addressTextView.setText(event_addresses[position]);
         holder.event_id = event_ids[position];
-        holder.task.execute(event_photos[position]);
+        if(!holder.bmImageIsSet) {
+            holder.task.execute(event_photos[position]);
+            holder.bmImageIsSet = true;
+        }
     }
 
     @Override

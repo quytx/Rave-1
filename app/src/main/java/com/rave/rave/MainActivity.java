@@ -291,28 +291,30 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 
+        JSONArray array;
+        try {
+            array = events;
+            Log.d("bam", array.toString());
+            Log.d("bam"," " + array.length());
+            for (int i = 0; i < array.length(); i++) {
+                recs = array.getJSONObject(i);
+                EVENT_NAMES[i] = recs.getString("name");
+                EVENT_LOCATIONS[i] = recs.getString("location");
+                LatLng currLatLng = getLocationFromAddress(EVENT_LOCATIONS[i]);
+                if(currLatLng!=null) {
+                    map.addMarker(new MarkerOptions().position(getLocationFromAddress(EVENT_LOCATIONS[i]))
+                            .title(EVENT_NAMES[i]));
+                }
+            }
+        } catch (JSONException e) {
+            Log.d("bam", "error with event array");
+        }
+
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
         if (location != null)
         {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(location.getLatitude(), location.getLongitude()), 13));
-
-            JSONArray array;
-            try {
-                array = events;
-                Log.d("bam", array.toString());
-                Log.d("bam"," " + array.length());
-                for (int i = 0; i < array.length(); i++) {
-                    recs = array.getJSONObject(i);
-                    EVENT_NAMES[i] = recs.getString("name");
-                    EVENT_LOCATIONS[i] = recs.getString("location");
-                    map.addMarker(new MarkerOptions().position(getLocationFromAddress(EVENT_LOCATIONS[i]))
-                            .title(EVENT_NAMES[i]));
-                }
-            } catch (JSONException e) {
-                Log.d("bam", "error with event array");
-            }
-
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
