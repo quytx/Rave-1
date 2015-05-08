@@ -37,6 +37,7 @@ public class EventActivity extends ActionBarActivity {
     private JSONArray array;
     private JSONObject rec;
     private String name;
+    private JSONObject ourEvent;
 
     private String[] detailTitles = {"Date", "Time", "Location", "Type"};
 
@@ -52,28 +53,14 @@ public class EventActivity extends ActionBarActivity {
 
         mEventTitle = getIntent().getStringExtra(MainActivity.EVENT_NAME);
 
-        events = getIntent().getStringExtra(MainActivity.EVENTS);
+        events = getIntent().getStringExtra(MainActivity.eventActivity);
 
         try {
-            array = new JSONArray(events);
+            ourEvent = new JSONObject(events);
         } catch (JSONException e) {
             Log.d("bam", "error with event array");
         }
 
-        for (int i = 0; i < array.length(); ++i) {
-            try {
-                rec = array.getJSONObject(i);
-            } catch (Exception e) {
-                Log.d("bam", "error with event array");
-            }
-            try {
-                name = rec.getString("name");
-            } catch (Exception e){
-                Log.d("bam", "name of event" + name);
-            }
-            // ...
-        }
-        Log.d("success", array.toString());
 
 
         eventDetailAdapter.setEventDataSet(getEventData());
@@ -95,13 +82,14 @@ public class EventActivity extends ActionBarActivity {
 
     //      int detailListSize = data.detailTitles.length;
 
-        data.eventTitle = mEventTitle;
-        data.eventImage = R.drawable.madison_header_background;
-        data.profilePic = R.drawable.profile_pic_example;
-        data.description = "As long as you're not that chick who at our last party threw up on " +
-                "our entertainment center and then kicked over our speaker into the vomit," +
-                " you're welcome to come rage with us this Friday. Free booze while supplies last." +
-                " No pets.";
+        try {
+            data.eventTitle = ourEvent.getString("name");
+            data.eventImage = R.drawable.madison_header_background;
+            data.profilePic = R.drawable.profile_pic_example;
+            data.description = ourEvent.getString("description");
+        } catch (Exception e){
+            Log.d("bam", "error with adding data");
+        }
 
 
         data.details = new String[detailTitles.length];

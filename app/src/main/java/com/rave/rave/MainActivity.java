@@ -87,6 +87,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     ActionBarDrawerToggle mDrawerToggle;
 
     JSONArray events;
+    final static String eventActivity = "";
     Bundle eventBundle = new Bundle();
 
     @Override

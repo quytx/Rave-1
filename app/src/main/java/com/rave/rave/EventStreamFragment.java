@@ -34,6 +34,7 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
     String EVENTS = "";
     JSONArray array;
     JSONObject recs;
+    JSONObject toEventActivity;
 
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -109,8 +110,14 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
 
                     Intent intent = new Intent(getActivity().getBaseContext(), EventActivity.class);
 
-                    intent.putExtra("jsonArray", EVENTS);
+                    try {
+                        toEventActivity = array.getJSONObject(position);
+                    } catch (Exception e){
+                        Log.d("bam", "error with event array");
+                    }
+
                     intent.putExtra(MainActivity.EVENT_NAME, EVENT_NAMES[position]);
+                    intent.putExtra(MainActivity.eventActivity, toEventActivity.toString());
 
                     startActivity(intent);
                     return true;
