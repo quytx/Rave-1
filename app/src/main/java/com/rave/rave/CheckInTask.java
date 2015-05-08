@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Data.EventData;
+import binders.HeaderBinder;
 import savage.UrlJsonAsyncTask;
 
 public class CheckInTask extends UrlJsonAsyncTask {
@@ -95,7 +96,8 @@ public class CheckInTask extends UrlJsonAsyncTask {
                     attendingButton.setImageResource(R.drawable.check_mark_gray);
                 }
             }
-            Toast.makeText(context, json.getString("info"), Toast.LENGTH_LONG).show();
+            if(url.toString().equals(HeaderBinder.CHECKIN_URL))
+                Toast.makeText(context, json.getString("info"), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             // something went wrong: show a Toast
             // with the exception message

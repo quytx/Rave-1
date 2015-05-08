@@ -34,7 +34,9 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
     Context mContext;
 
     //URL for connecting to server
-    private final static String CHECKIN_URL = "http://madrave.herokuapp.com/api/v1/checkin";
+    public final static String CHECKIN_URL = "http://madrave.herokuapp.com/api/v1/checkin";
+    public final static String CHECKIN_STATUS_URL = "http://madrave.herokuapp.com/api/v1/checkinstatus";
+
 
 
     private List<EventData> mDataSet = new ArrayList<>();
@@ -65,7 +67,7 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
         holder.eventImageView.setImageResource(data.eventImage);
 
         if(!checkinStatusValid){
-            checkedIn = checkIn(CHECKIN_URL, position, holder.attendingButton);
+            checkedIn = checkIn(CHECKIN_STATUS_URL, position, holder.attendingButton);
         }
 
         holder.attendingButton.setOnClickListener(new View.OnClickListener() {
