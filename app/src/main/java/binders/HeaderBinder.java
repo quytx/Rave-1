@@ -56,6 +56,7 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
         holder.mTitleText.setText(data.eventTitle);
         holder.profilePic.setImageResource(data.profilePic);
 
+
         holder.task.execute(data.eventImage);
 
 
@@ -100,12 +101,13 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
         TextView mContent;
         DownloadImageTask task;
 
+
         public ViewHolder(View view) {
             super(view);
             mTitleText = (TextView) view.findViewById(R.id.event_title_text);
+
             //eventImageView = (ImageView) view.findViewById(R.id.event_detail_main_image);
             task = new DownloadImageTask((ImageView) view.findViewById(R.id.event_detail_main_image));
-
             attendingButton = (ImageView) view.findViewById(R.id.check_mark);
             profilePic = (CircleImageView) view.findViewById(R.id.profile_pic);
 

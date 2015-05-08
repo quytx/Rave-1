@@ -14,6 +14,11 @@ public class EventData {
     public String eventImage;
     public ArrayList<String> attendingListNames;
     public ArrayList<Integer> attendingListpics;
-    public String[] details;
+  //  public String[] details;
+    public String date;
+    public String startTime;
+    public String endTime;
+    public String location;
+
     //public ImageView eventImage;
 }

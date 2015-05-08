@@ -47,6 +47,8 @@ public class GoogleMapFragment extends MapFragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+
+
     }
 
     public GoogleMapFragment() {

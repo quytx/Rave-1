@@ -10,10 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,6 @@ public class EventActivity extends ActionBarActivity {
     RecyclerView recyclerView;
     RecyclerView.Adapter mRecyclerAdapter;
     RecyclerView.LayoutManager mLayoutManager;
-
 
     private String mEventTitle;
     private TextView textView;
@@ -83,18 +84,19 @@ public class EventActivity extends ActionBarActivity {
         //      int detailListSize = data.detailTitles.length;
 
         try {
+
+
             data.eventTitle = ourEvent.getString("name");
             data.eventImage = ourEvent.getString("cover_photo");
             data.profilePic = R.drawable.profile_pic_example;
             data.description = ourEvent.getString("description");
+            data.startTime = ourEvent.getString("start_time");
+            data.endTime = ourEvent.getString("end_time");
+            data.location = ourEvent.getString("location");
+
+
         } catch (Exception e){
             Log.d("bam", "error with adding data");
-        }
-
-
-        data.details = new String[detailTitles.length];
-        for(int i = 0; i < detailTitles.length; i++){
-            data.details[i] = "Detail " + i;
         }
 
         dataSet.add(data);

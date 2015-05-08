@@ -22,6 +22,8 @@
     <string name="details_title">Details</string>
     <string name="date_title">Date</string>
     <string name="time_title">Time</string>
+    <string name="start_time_title">Start Time</string>
+    <string name="end_time_title">End Time</string>
     <string name="location_title">Location</string>
     <string name="type_title">Party Style</string>
     <string name="guest_list_title">Guest List</string>

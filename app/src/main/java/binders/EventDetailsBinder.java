@@ -1,6 +1,7 @@
 package binders;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +36,12 @@ public class EventDetailsBinder extends DataBinder<EventDetailsBinder.ViewHolder
     @Override
     public void bindViewHolder(ViewHolder holder, int position) {
         EventData data = mDataSet.get(position);
-        holder.dateDetailView.setText(data.details[0]);
-        holder.timeDetailView.setText(data.details[1]);
-        holder.locationDetailView.setText(data.details[2]);
-        holder.typeLocationView.setText(data.details[3]);
+
+
+
+        holder.startTime.setText(data.startTime);
+        holder.endTime.setText(data.endTime);
+        holder.location.setText(data.location);
 
     }
 
@@ -59,18 +62,20 @@ public class EventDetailsBinder extends DataBinder<EventDetailsBinder.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView dateDetailView;
-        TextView timeDetailView;
-        TextView locationDetailView;
-        TextView typeLocationView;
+
+        TextView startTime;
+        TextView endTime;
+        TextView location;
 
 
         public ViewHolder(View view) {
             super(view);
-            dateDetailView = (TextView) view.findViewById(R.id.date_field);
-            timeDetailView = (TextView) view.findViewById(R.id.time_field);
-            locationDetailView = (TextView) view.findViewById(R.id.location_field);
-            typeLocationView = (TextView) view.findViewById(R.id.type_field);
+
+            startTime = (TextView) view.findViewById(R.id.start_time_field);
+            endTime = (TextView) view.findViewById(R.id.end_time_field);
+            location = (TextView) view.findViewById(R.id.location_field);
+
+            location.setMovementMethod(new ScrollingMovementMethod());
 
 
 
