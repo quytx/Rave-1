@@ -1,7 +1,5 @@
 package Data;
 
-import android.widget.ImageView;
-
 import java.util.ArrayList;
 
 /**
@@ -12,6 +10,7 @@ public class EventData {
     public String description;
     public int profilePic;
     public String eventImage;
+    public String eventID;
     public ArrayList<String> attendingListNames;
     public ArrayList<Integer> attendingListpics;
   //  public String[] details;

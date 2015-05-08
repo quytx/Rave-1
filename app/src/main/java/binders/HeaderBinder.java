@@ -4,6 +4,8 @@ package binders;
  * Created by Jacob on 4/17/2015.
  */
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -31,8 +33,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
 
+    private SharedPreferences mPreferences;
+    public int currEvent;
+    Context mContext;
+
+    //URL for connecting to server
+    public final static String CHECKIN_URL = "http://madrave.herokuapp.com/api/v1/checkin";
+    public final static String CHECKIN_STATUS_URL = "http://madrave.herokuapp.com/api/v1/checkinstatus";
+
+
+
     private List<EventData> mDataSet = new ArrayList<>();
+
+    //Check the "checkin" status
     private boolean checked = false;
+    private boolean checkedIn = false;
+    private boolean checkinStatusValid = false;
 
     public HeaderBinder(DataBindAdapter dataBindAdapter) {
         super(dataBindAdapter);
@@ -40,21 +56,22 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
 
     @Override
     public ViewHolder newViewHolder(ViewGroup parent) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.event_detail_header, parent, false);
-
-
-
+        mContext = parent.getContext();
+        mPreferences = mContext.getSharedPreferences("CurrentUser", mContext.MODE_PRIVATE);
         return new ViewHolder(view);
     }
 
     @Override
-    public void bindViewHolder(final ViewHolder holder, int position) {
-
+    public void bindViewHolder(final ViewHolder holder, final int position) {
         EventData data = mDataSet.get(position);
         holder.mTitleText.setText(data.eventTitle);
         holder.profilePic.setImageResource(data.profilePic);
+
+        if(!checkinStatusValid){
+            checkedIn = checkIn(CHECKIN_STATUS_URL, position, holder.attendingButton);
+        }
 
 
         holder.task.execute(data.eventImage);
@@ -65,16 +82,19 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
         holder.attendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!checked) {
-                    holder.attendingButton.setImageResource(R.drawable.check_mark_green);
-                    checked = true;
-                }
-                else{
-                    holder.attendingButton.setImageResource(R.drawable.check_mark_gray);
-                    checked = false;
-                }
+                checkedIn = checkIn(CHECKIN_URL, position, holder.attendingButton);
             }
         });
+    }
+
+    private boolean checkIn(String url, int position, ImageView attendingButton) {
+        currEvent = position;
+        CheckInTask checkInTask = new CheckInTask(mContext, mPreferences, mDataSet, currEvent, url, attendingButton);
+        checkInTask.checkIn();
+        if(checkInTask.getCheckedIn()){
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -95,18 +115,15 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView mTitleText;
-       // ImageView eventImageView;
+        ImageView eventImageView;
         ImageView attendingButton;
         CircleImageView profilePic;
         TextView mContent;
         DownloadImageTask task;
 
-
         public ViewHolder(View view) {
             super(view);
             mTitleText = (TextView) view.findViewById(R.id.event_title_text);
-
-            //eventImageView = (ImageView) view.findViewById(R.id.event_detail_main_image);
             task = new DownloadImageTask((ImageView) view.findViewById(R.id.event_detail_main_image));
             attendingButton = (ImageView) view.findViewById(R.id.check_mark);
             profilePic = (CircleImageView) view.findViewById(R.id.profile_pic);

@@ -31,6 +31,7 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
     String[] EVENT_NAMES;
     String[] EVENT_LOCATIONS;
     String[] EVENT_PHOTOS;
+    String[] EVENT_IDS;
 
     String EVENTS = "";
     JSONArray array;
@@ -52,12 +53,14 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
                 EVENT_NAMES = new String[array.length()];
                 EVENT_LOCATIONS = new String[array.length()];
                 EVENT_PHOTOS = new String[array.length()];
+                EVENT_IDS = new String[array.length()];
 
                 for (int i = 0; i < array.length(); i++) {
                     recs = array.getJSONObject(i);
                     EVENT_NAMES[i] = recs.getString("name");
                     EVENT_LOCATIONS[i] = recs.getString("location");
                     EVENT_PHOTOS[i] = recs.getString("cover_photo");
+                    EVENT_IDS[i] = recs.getString("id");
                 }
             } catch (JSONException e) {
                 Log.d("bam", "error with event array");
@@ -73,7 +76,7 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
 
 
 
-        mCardAdapter = new CardAdapter(EVENT_NAMES, EVENT_LOCATIONS, EVENT_PHOTOS);
+        mCardAdapter = new CardAdapter(EVENT_NAMES, EVENT_LOCATIONS,EVENT_IDS,EVENT_PHOTOS);
         mCardView.setAdapter(mCardAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) parent.findViewById(R.id.fab);
