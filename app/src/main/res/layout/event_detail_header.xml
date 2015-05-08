@@ -40,13 +40,6 @@
             android:contentDescription="Attending" />
     </LinearLayout>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/profile_pic_example"
-        android:layout_marginTop="38dp"
-        android:id="@+id/profile_pic"
-        android:layout_gravity="center_horizontal" />
 
 
 </LinearLayout>
