@@ -7,35 +7,22 @@ package binders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.rave.rave.CreateEventActivity;
+import com.rave.rave.CheckInTask;
 import com.rave.rave.R;
 import com.yqritc.recyclerviewmultipleviewtypesadapter.DataBindAdapter;
 import com.yqritc.recyclerviewmultipleviewtypesadapter.DataBinder;
 
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import Data.EventData;
 import de.hdodenhof.circleimageview.CircleImageView;
-import savage.UrlJsonAsyncTask;
 
 /**
  * Created by yqritc on 2015/03/20.
@@ -51,7 +38,11 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
 
 
     private List<EventData> mDataSet = new ArrayList<>();
+
+    //Check the "checkin" status
     private boolean checked = false;
+    private boolean checkedIn = false;
+    private boolean checkinStatusValid = false;
 
     public HeaderBinder(DataBindAdapter dataBindAdapter) {
         super(dataBindAdapter);
@@ -62,6 +53,7 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.event_detail_header, parent, false);
         mContext = parent.getContext();
+        mPreferences = mContext.getSharedPreferences("CurrentUser", mContext.MODE_PRIVATE);
         return new ViewHolder(view);
     }
 
@@ -72,27 +64,27 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
         holder.profilePic.setImageResource(data.profilePic);
         holder.eventImageView.setImageResource(data.eventImage);
 
+        if(!checkinStatusValid){
+            checkedIn = checkIn(CHECKIN_URL, position, holder.attendingButton);
+        }
+
         holder.attendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitNewEvent(CHECKIN_URL, position);
-                if (!checked) {
-                    holder.attendingButton.setImageResource(R.drawable.check_mark_green);
-                    checked = true;
-                } else {
-                    holder.attendingButton.setImageResource(R.drawable.check_mark_gray);
-                    checked = false;
-                }
+                checkedIn = checkIn(CHECKIN_URL, position, holder.attendingButton);
             }
         });
+
     }
 
-    private void submitNewEvent(String url, int position) {
+    private boolean checkIn(String url, int position, ImageView attendingButton) {
         currEvent = position;
-        CheckInTask checkInTask = new CheckInTask(mContext);
-        CheckInTask.setMessageLoading("Checking In");
-        CheckInTask.execute(url);
-
+        CheckInTask checkInTask = new CheckInTask(mContext, mPreferences, mDataSet, currEvent, url, attendingButton);
+        checkInTask.checkIn();
+        if(checkInTask.getCheckedIn()){
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -125,71 +117,7 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
             attendingButton = (ImageView) view.findViewById(R.id.check_mark);
             profilePic = (CircleImageView) view.findViewById(R.id.profile_pic);
 
-
         }
     }
 
-    private class CheckInTask extends UrlJsonAsyncTask {
-
-        public CheckInTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... urls) {
-            DefaultHttpClient client = new DefaultHttpClient();
-            HttpPost post = new HttpPost(urls[0]);   //urls[0] api/v1/sessions
-            JSONObject holder = new JSONObject();
-            String response = null;
-            JSONObject json = new JSONObject();
-
-            try {
-                try {
-                    // setup the returned values in case
-                    holder.put("user_id", mPreferences.getString("UserID","none"));
-                    holder.put("event_id", mDataSet.get(currEvent).eventID);
-
-                    StringEntity se = new StringEntity(holder.toString());
-                    post.setEntity(se);
-
-                    // setup the request headers
-                    post.setHeader("Accept", "application/json");
-                    post.setHeader("Content-Type", "application/json");
-
-                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                    response = client.execute(post, responseHandler);
-                    json = new JSONObject(response);
-
-                } catch (HttpResponseException e) {
-                    e.printStackTrace();
-                    Log.e("ClientProtocol", "" + e);
-                    json.put("info", "Email and/or password are invalid. Retry!");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e("IO", "" + e);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.e("JSON", "" + e);
-            }
-
-            return json;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject json) {
-            try {
-                if (json.getBoolean("success")) {
-//                    // everything is ok
-                }
-                Toast.makeText(context, json.getString("info"), Toast.LENGTH_LONG).show();
-            } catch (Exception e) {
-                // something went wrong: show a Toast
-                // with the exception message
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            } finally {
-                super.onPostExecute(json);
-            }
-        }
-    }
 }

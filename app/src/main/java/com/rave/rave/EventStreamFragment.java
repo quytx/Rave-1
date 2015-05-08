@@ -52,12 +52,14 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
                 Log.d("bam"," " + array.length());
                 EVENT_NAMES = new String[array.length()];
                 EVENT_LOCATIONS = new String[array.length()];
+                EVENT_IDS = new String[array.length()];
+                EVENT_PICTURE_URL = new String[array.length()];
 
                 for (int i = 0; i < array.length(); i++) {
                     recs = array.getJSONObject(i);
                     EVENT_NAMES[i] = recs.getString("name");
                     EVENT_LOCATIONS[i] = recs.getString("location");
-                    EVENT_IDS[i] = recs.getString("event_id");
+                    EVENT_IDS[i] = recs.getString("id");
                     EVENT_PICTURE_URL[i] = recs.getString("cover_photo");
                 }
             } catch (JSONException e) {
