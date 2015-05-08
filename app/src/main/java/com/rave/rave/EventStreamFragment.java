@@ -47,6 +47,7 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
         if(bundle != null){
 
             EVENTS = bundle.getString(MainActivity.EVENTS);
+
             try {
                 array = new JSONArray(EVENTS);
                 Log.d("bam", array.toString());
@@ -61,6 +62,9 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
                     EVENT_NAMES[i] = recs.getString("name");
                     EVENT_LOCATIONS[i] = recs.getString("location");
                     EVENT_PHOTOS[i] = recs.getString("cover_photo");
+                    if (EVENT_PHOTOS[i].equals("null")) {
+                        EVENT_PHOTOS[i] = "http://s30.postimg.org/43c1roizl/no_image_large.jpg";
+                    }
                     EVENT_IDS[i] = recs.getString("id");
                 }
             } catch (JSONException e) {
@@ -142,10 +146,12 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
         return parent;
     }
 
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(getActivity().getBaseContext(), "The Item Clicked is: " +
                 position, Toast.LENGTH_SHORT).show();
     }
+
 
 }

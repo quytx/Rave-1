@@ -60,6 +60,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     private Toolbar toolbar;
     private final static String LOGOUT_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/sessions";
     private final static String EVENTS_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/events.json";
+    private final static String MY_EVENTS_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/myevents.json";
+
     private SharedPreferences mPreferences;
 
     //Declare Titles and Icons for Nav Drawer
@@ -110,6 +112,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
 
         DRAWER_ITEMS = getResources().getStringArray(R.array.drawer_items);
+        NAME = mPreferences.getString("UserName","Anonymous");
+        EMAIL = mPreferences.getString("UserEmail","user@example.com");
 
         int ICONS[] = {R.drawable.event_stream_icon,R.drawable.itinerary_icon,
                 R.drawable.friends_icon,
@@ -192,6 +196,9 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
 
                     drawerLayout.closeDrawers();
+
+                   // new HttpAsyncTask().execute(MY_EVENTS_API_ENDPOINT_URL);
+
                     return true;
                 }
                 return false;
@@ -291,28 +298,30 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 
+        JSONArray array;
+        try {
+            array = events;
+            Log.d("bam", array.toString());
+            Log.d("bam"," " + array.length());
+            for (int i = 0; i < array.length(); i++) {
+                recs = array.getJSONObject(i);
+                EVENT_NAMES[i] = recs.getString("name");
+                EVENT_LOCATIONS[i] = recs.getString("location");
+                LatLng currLatLng = getLocationFromAddress(EVENT_LOCATIONS[i]);
+                if(currLatLng!=null) {
+                    map.addMarker(new MarkerOptions().position(getLocationFromAddress(EVENT_LOCATIONS[i]))
+                            .title(EVENT_NAMES[i]));
+                }
+            }
+        } catch (JSONException e) {
+            Log.d("bam", "error with event array");
+        }
+
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
         if (location != null)
         {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(location.getLatitude(), location.getLongitude()), 13));
-
-            JSONArray array;
-            try {
-                array = events;
-                Log.d("bam", array.toString());
-                Log.d("bam"," " + array.length());
-                for (int i = 0; i < array.length(); i++) {
-                    recs = array.getJSONObject(i);
-                    EVENT_NAMES[i] = recs.getString("name");
-                    EVENT_LOCATIONS[i] = recs.getString("location");
-                    map.addMarker(new MarkerOptions().position(getLocationFromAddress(EVENT_LOCATIONS[i]))
-                            .title(EVENT_NAMES[i]));
-                }
-            } catch (JSONException e) {
-                Log.d("bam", "error with event array");
-            }
-
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
@@ -434,8 +443,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         protected String doInBackground(String... urls) {
 
             String json = GET(urls[0]);
-
-
 
             for(int n = 0; n < events.length(); n++)
             {

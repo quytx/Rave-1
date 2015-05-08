@@ -34,9 +34,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
         TextView addressTextView;
-        //ImageView imageView;
-        DownloadImageTask task;
+        ImageView imageView;
+        //DownloadImageTask task;
         String event_id;
+      //  private boolean bmImageIsSet;
+
 
 
         public ViewHolder(View itemView) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
@@ -44,8 +46,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
             titleTextView = (TextView) itemView.findViewById(R.id.event_title_text);
             addressTextView = (TextView) itemView.findViewById(R.id.event_address_text);
-            //imageView = (ImageView) itemView.findViewById(R.id.event_image);
-            task = new DownloadImageTask((ImageView) itemView.findViewById(R.id.event_image));
+            imageView = (ImageView) itemView.findViewById(R.id.event_image);
+
+          //  bmImageIsSet = false;
         }
     }
 
@@ -59,22 +62,31 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.titleTextView.setText(event_titles[position]);
-        holder.addressTextView.setText(event_addresses[position]);
-        holder.event_id = event_ids[position];
-        holder.task.execute(event_photos[position]);
+
+    //    if(!holder.bmImageIsSet) {
+        DownloadImageTask task = new DownloadImageTask(holder.imageView, position, holder);
+            task.execute(event_photos[position]);
+   //         holder.bmImageIsSet = true;
+    //    }
     }
 
     @Override
     public int getItemCount() {
+        if(event_titles == null) {
+            return 0;
+        }
         return event_titles.length;
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
+        int position;
+        ViewHolder holder;
 
-        public DownloadImageTask(ImageView bmImage) {
+        public DownloadImageTask(ImageView bmImage, int position, ViewHolder holder) {
             this.bmImage = bmImage;
+            this.position = position;
+            this.holder = holder;
         }
 
         protected Bitmap doInBackground(String... urls) {
@@ -91,6 +103,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         }
 
         protected void onPostExecute(Bitmap result) {
+            holder.titleTextView.setText(event_titles[position]);
+            holder.addressTextView.setText(event_addresses[position]);
+            holder.event_id = event_ids[position];
             bmImage.setImageBitmap(result);
         }
     }

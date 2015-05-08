@@ -8,9 +8,6 @@
     <string-array name="drawer_items">
         <item>Event Stream</item>
         <item>Itinerary</item>
-        <item>Friends</item>
-        <item>Favorites</item>
-        <item>Night Recaps</item>
         <item>My Events</item>
     </string-array>
 
@@ -43,6 +40,7 @@
     <string name="user_password_confirmation">confirm password</string>
     <string name="register_disclaimer">disclamer</string>
     <string name="title_activity_logout">LogoutActivity</string>
+    <string name="action_search">Search</string>
 
 
 </resources>
