@@ -1,12 +1,21 @@
 package binders;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.rave.rave.R;
 import com.yqritc.recyclerviewmultipleviewtypesadapter.DataBindAdapter;
 import com.yqritc.recyclerviewmultipleviewtypesadapter.DataBinder;
@@ -19,8 +28,13 @@ import Data.EventData;
 /**
  * Created by Jacob on 4/17/2015.
  */
-public class EventDescriptionBinder extends DataBinder<EventDescriptionBinder.ViewHolder> {
+public class EventDescriptionBinder extends DataBinder<EventDescriptionBinder.ViewHolder> implements OnMapReadyCallback {
     private List<EventData> mDataSet = new ArrayList<>();
+    Context mContext;
+    Activity callingActivity;
+    FragmentManager fragmentManager;
+    private LatLng latLng;
+    private String eventTitle;
 
     public EventDescriptionBinder(DataBindAdapter dataBindAdapter) {
         super(dataBindAdapter);
@@ -28,7 +42,10 @@ public class EventDescriptionBinder extends DataBinder<EventDescriptionBinder.Vi
 
     @Override
     public ViewHolder newViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(
+        mContext = parent.getContext();
+        callingActivity = (Activity) mContext;
+        fragmentManager = callingActivity.getFragmentManager();
+        View view = LayoutInflater.from(mContext).inflate(
                 R.layout.event_detail_description, parent, false);
         return new ViewHolder(view);
     }
@@ -36,7 +53,11 @@ public class EventDescriptionBinder extends DataBinder<EventDescriptionBinder.Vi
     @Override
     public void bindViewHolder(ViewHolder holder, int position) {
         EventData data = mDataSet.get(position);
+        latLng = data.latLng;
+        eventTitle = data.eventTitle;
         holder.descriptionView.setText(data.description);
+        holder.mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.map);
+        holder.mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -54,16 +75,29 @@ public class EventDescriptionBinder extends DataBinder<EventDescriptionBinder.Vi
         notifyBinderDataSetChanged();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void onMapReady(GoogleMap map) {
+        CameraUpdate center=
+                CameraUpdateFactory.newLatLng(latLng);
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+        map.addMarker(new MarkerOptions().position(latLng)
+                .title(eventTitle));
+                map.moveCamera(center);
+        map.animateCamera(zoom);
+    }
+
+
+    static class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView descriptionView;
         MapFragment mapFragment;
+        GoogleMap map;
 
 
         public ViewHolder(View view) {
             super(view);
             descriptionView = (TextView) view.findViewById(R.id.event_description);
-
+;
         }
     }
 }

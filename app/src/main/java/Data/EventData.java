@@ -1,5 +1,7 @@
 package Data;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
 /**
@@ -18,6 +20,7 @@ public class EventData {
     public String startTime;
     public String endTime;
     public String location;
+    public LatLng latLng;
 
     //public ImageView eventImage;
 }

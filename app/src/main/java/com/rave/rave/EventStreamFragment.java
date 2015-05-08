@@ -32,6 +32,7 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
     String[] EVENT_LOCATIONS;
     String[] EVENT_PHOTOS;
     String[] EVENT_IDS;
+    //Wrk
 
     String EVENTS = "";
     JSONArray array;
@@ -146,4 +147,5 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
         Toast.makeText(getActivity().getBaseContext(), "The Item Clicked is: " +
                 position, Toast.LENGTH_SHORT).show();
     }
+
 }

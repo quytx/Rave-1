@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +27,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
@@ -37,11 +50,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import savage.UrlJsonAsyncTask;
 
 
-public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener{
+public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener, OnMapReadyCallback {
 
     private Toolbar toolbar;
     private final static String LOGOUT_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/sessions";
@@ -55,6 +69,9 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     //TODO:Limit character input for event title or else it will overflow
     String EVENT_TITLES[] = {"Event 1", "Event 2", "Event 3", "Event 4"};
 
+    //Google Map stuff
+    GoogleMap map;
+
     //Create string res for name and email in header view
     String NAME = "Jacob Pandl";
     String EMAIL = "jpandl19@gmail.com";
@@ -62,12 +79,12 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
 
     //Variables for EventStreamFragment
-    final String[] EVENT_NAMES = {"Party Name 1", "Party Name 2", "Party Name 3",
+    String[] EVENT_NAMES = {"Party Name 1", "Party Name 2", "Party Name 3",
             "Party 4 Name", "Party Name 5"};
     final static String EVENT_NAME = "Event Names";
 
     final static String LOCATIONS = "Event Locations";
-    final String[] EVENT_LOCATIONS = {"123 Main St", "5026 N Woodburn", "56 N Park", "27 N Brooks",
+    String[] EVENT_LOCATIONS = {"123 Main St", "5026 N Woodburn", "56 N Park", "27 N Brooks",
             "West Palm Beach"};
 
     final static String EVENTS = "Event Info";
@@ -91,10 +108,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
-
-
-
-
 
         DRAWER_ITEMS = getResources().getStringArray(R.array.drawer_items);
 
@@ -177,11 +190,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                     Toast.makeText(MainActivity.this, "The Item Clicked is: " +
                             position, Toast.LENGTH_SHORT).show();
 
-//                    MapFragment mMapFragment = MapFragment.newInstance();
-//                    FragmentTransaction fragmentTransaction =
-//                            getFragmentManager().beginTransaction();
-//                    fragmentTransaction.add(R.id.fragmentContainer, mMapFragment);
-//                    fragmentTransaction.commit();
 
                     drawerLayout.closeDrawers();
                     return true;
@@ -261,12 +269,88 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             return true;
         }
 
+        if(id == R.id.action_map_view){
+            Toast.makeText(this, "launch map view", Toast.LENGTH_SHORT).show();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            MapFragment mapFragment = MapFragment.newInstance();
+            mapFragment.getMapAsync(this);
+            fragmentTransaction.add(R.id.fragmentContainer, mapFragment).commit();
+        }
+
         if(mDrawerToggle.onOptionsItemSelected(item)){
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        JSONObject recs;
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        if (location != null)
+        {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+            JSONArray array;
+            try {
+                array = events;
+                Log.d("bam", array.toString());
+                Log.d("bam"," " + array.length());
+                for (int i = 0; i < array.length(); i++) {
+                    recs = array.getJSONObject(i);
+                    EVENT_NAMES[i] = recs.getString("name");
+                    EVENT_LOCATIONS[i] = recs.getString("location");
+                    map.addMarker(new MarkerOptions().position(getLocationFromAddress(EVENT_LOCATIONS[i]))
+                            .title(EVENT_NAMES[i]));
+                }
+            } catch (JSONException e) {
+                Log.d("bam", "error with event array");
+            }
+
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                    .zoom(15)                   // Sets the zoom
+                    .build();                   // Creates a CameraPosition from the builder
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        }
+
+
+    }
+
+    public LatLng getLocationFromAddress(String strAddress) {
+
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
+    }
+
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -279,6 +363,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         logoutTask.execute(url);
 
     }
+
 
     private class LogoutTask extends UrlJsonAsyncTask {
         public LogoutTask(Context context) {
