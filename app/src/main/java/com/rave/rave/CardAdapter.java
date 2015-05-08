@@ -21,11 +21,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     private String[] event_titles;
     private String[] event_addresses;
     private String[] event_photos;
+    private String[] event_ids;
 
-    public CardAdapter(String[] event_titles, String[] event_addresses, String[] event_photos) {
+    public CardAdapter(String[] event_titles, String[] event_addresses, String[] event_ids, String[] event_photos) {
         this.event_titles = event_titles;
         this.event_addresses = event_addresses;
         this.event_photos = event_photos;
+        this.event_ids = event_ids;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -33,6 +35,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         TextView addressTextView;
         //ImageView imageView;
         DownloadImageTask task;
+        String event_id;
 
 
         public ViewHolder(View itemView) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
@@ -58,9 +61,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.titleTextView.setText(event_titles[position]);
         holder.addressTextView.setText(event_addresses[position]);
+        holder.event_id = event_ids[position];
         holder.task.execute(event_photos[position]);
 
-        //holder.imageView.setImageResource(R.drawable.madison_header_background);
     }
 
     @Override
