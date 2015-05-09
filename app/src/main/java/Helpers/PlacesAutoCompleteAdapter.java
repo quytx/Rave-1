@@ -1,4 +1,4 @@
-package GooglePlaceHelpers;
+package Helpers;
 
 /**
  * Created by Jacob on 5/3/2015.

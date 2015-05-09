@@ -20,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Helpers.EventDataParser;
+
 
 public class EventStreamFragment extends Fragment implements AdapterView.OnItemClickListener{
 
@@ -47,29 +49,42 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
         if(bundle != null){
 
             EVENTS = bundle.getString(MainActivity.EVENTS);
-
             try {
                 array = new JSONArray(EVENTS);
-                Log.d("bam", array.toString());
-                Log.d("bam"," " + array.length());
-                EVENT_NAMES = new String[array.length()];
-                EVENT_LOCATIONS = new String[array.length()];
-                EVENT_PHOTOS = new String[array.length()];
-                EVENT_IDS = new String[array.length()];
-
-                for (int i = 0; i < array.length(); i++) {
-                    recs = array.getJSONObject(i);
-                    EVENT_NAMES[i] = recs.getString("name");
-                    EVENT_LOCATIONS[i] = recs.getString("location");
-                    EVENT_PHOTOS[i] = recs.getString("cover_photo");
-                    if (EVENT_PHOTOS[i].equals("null")) {
-                        EVENT_PHOTOS[i] = "http://s30.postimg.org/43c1roizl/no_image_large.jpg";
-                    }
-                    EVENT_IDS[i] = recs.getString("id");
-                }
+                EventDataParser eventDataParser = new EventDataParser(array);
+                eventDataParser.parseEvents();
+                EVENT_NAMES = eventDataParser.getEventNames();
+                EVENT_LOCATIONS = eventDataParser.getEventLocations();
+                EVENT_PHOTOS = eventDataParser.getEventPhotos();
+                EVENT_IDS = eventDataParser.getEventIds();
             } catch (JSONException e) {
-                Log.d("bam", "error with event array");
+                e.printStackTrace();
             }
+
+//            try {
+//                array = new JSONArray(EVENTS);
+//                EventDataParser eventDataParser = new EventDataParser(array);
+//                eventDataParser.parseEvents();
+//                Log.d("bam", array.toString());
+//                Log.d("bam"," " + array.length());
+//                EVENT_NAMES = new String[array.length()];
+//                EVENT_LOCATIONS = new String[array.length()];
+//                EVENT_PHOTOS = new String[array.length()];
+//                EVENT_IDS = new String[array.length()];
+//
+//                for (int i = 0; i < array.length(); i++) {
+//                    recs = array.getJSONObject(i);
+//                    EVENT_NAMES[i] = recs.getString("name");
+//                    EVENT_LOCATIONS[i] = recs.getString("location");
+//                    EVENT_PHOTOS[i] = recs.getString("cover_photo");
+//                    if (EVENT_PHOTOS[i].equals("null")) {
+//                        EVENT_PHOTOS[i] = "http://s30.postimg.org/43c1roizl/no_image_large.jpg";
+//                    }
+//                    EVENT_IDS[i] = recs.getString("id");
+//                }
+//            } catch (JSONException e) {
+//                Log.d("bam", "error with event array");
+//            }
         }
 
 
