@@ -52,6 +52,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import Helpers.EventDataParser;
 import savage.UrlJsonAsyncTask;
 
 
@@ -60,12 +61,13 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     private Toolbar toolbar;
     private final static String LOGOUT_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/sessions";
     private final static String EVENTS_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/events.json";
-    private final static String MY_EVENTS_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/myevents.json";
-
     private SharedPreferences mPreferences;
 
     //Declare Titles and Icons for Nav Drawer
     String DRAWER_ITEMS[];
+
+    //Hold the main menu
+    Menu mainMenu;
 
     //Declare Titles for Cards
     //TODO:Limit character input for event title or else it will overflow
@@ -254,7 +256,10 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        mainMenu = menu;
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem streamItem = mainMenu.findItem(R.id.action_stream_view);
+        streamItem.setVisible(false);
         return true;
     }
 
@@ -276,13 +281,27 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             return true;
         }
 
+        if(id == R.id.action_stream_view){
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            EventStreamFragment eventStreamFragment = new EventStreamFragment();
+            eventStreamFragment.setArguments(eventBundle);
+            item.setVisible(false);
+            MenuItem mapItem = mainMenu.findItem(R.id.action_map_view);
+            mapItem.setVisible(true);
+            fragmentTransaction.replace(R.id.fragmentContainer, eventStreamFragment).commit();
+
+        }
         if(id == R.id.action_map_view){
             Toast.makeText(this, "launch map view", Toast.LENGTH_SHORT).show();
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             MapFragment mapFragment = MapFragment.newInstance();
             mapFragment.getMapAsync(this);
-            fragmentTransaction.add(R.id.fragmentContainer, mapFragment).commit();
+            item.setVisible(false);
+            MenuItem streamItem = mainMenu.findItem(R.id.action_stream_view);
+            streamItem.setVisible(true);
+            fragmentTransaction.replace(R.id.fragmentContainer, mapFragment).commit();
         }
+
 
         if(mDrawerToggle.onOptionsItemSelected(item)){
             return true;
@@ -298,24 +317,42 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 
-        JSONArray array;
-        try {
-            array = events;
-            Log.d("bam", array.toString());
-            Log.d("bam"," " + array.length());
-            for (int i = 0; i < array.length(); i++) {
-                recs = array.getJSONObject(i);
-                EVENT_NAMES[i] = recs.getString("name");
-                EVENT_LOCATIONS[i] = recs.getString("location");
+        JSONArray array = events;
+        EventDataParser eventDataParser = new EventDataParser(array);
+        eventDataParser.parseEvents();
+
+        EVENT_NAMES = eventDataParser.getEventNames();
+        EVENT_LOCATIONS = eventDataParser.getEventLocations();
+
+
+        for (int i = 0; i < events.length(); i++) {
                 LatLng currLatLng = getLocationFromAddress(EVENT_LOCATIONS[i]);
                 if(currLatLng!=null) {
                     map.addMarker(new MarkerOptions().position(getLocationFromAddress(EVENT_LOCATIONS[i]))
                             .title(EVENT_NAMES[i]));
                 }
             }
-        } catch (JSONException e) {
-            Log.d("bam", "error with event array");
-        }
+
+
+
+//        JSONArray array;
+//        try {
+//            array = events;
+//            Log.d("bam", array.toString());
+//            Log.d("bam"," " + array.length());
+//            for (int i = 0; i < array.length(); i++) {
+//                recs = array.getJSONObject(i);
+//                EVENT_NAMES[i] = recs.getString("name");
+//                EVENT_LOCATIONS[i] = recs.getString("location");
+//                LatLng currLatLng = getLocationFromAddress(EVENT_LOCATIONS[i]);
+//                if(currLatLng!=null) {
+//                    map.addMarker(new MarkerOptions().position(getLocationFromAddress(EVENT_LOCATIONS[i]))
+//                            .title(EVENT_NAMES[i]));
+//                }
+//            }
+//        } catch (JSONException e) {
+//            Log.d("bam", "error with event array");
+//        }
 
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
         if (location != null)

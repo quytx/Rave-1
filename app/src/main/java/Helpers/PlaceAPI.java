@@ -1,4 +1,4 @@
-package GooglePlaceHelpers;
+package Helpers;
 
 import android.util.Log;
 
