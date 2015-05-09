@@ -334,26 +334,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             }
 
 
-
-//        JSONArray array;
-//        try {
-//            array = events;
-//            Log.d("bam", array.toString());
-//            Log.d("bam"," " + array.length());
-//            for (int i = 0; i < array.length(); i++) {
-//                recs = array.getJSONObject(i);
-//                EVENT_NAMES[i] = recs.getString("name");
-//                EVENT_LOCATIONS[i] = recs.getString("location");
-//                LatLng currLatLng = getLocationFromAddress(EVENT_LOCATIONS[i]);
-//                if(currLatLng!=null) {
-//                    map.addMarker(new MarkerOptions().position(getLocationFromAddress(EVENT_LOCATIONS[i]))
-//                            .title(EVENT_NAMES[i]));
-//                }
-//            }
-//        } catch (JSONException e) {
-//            Log.d("bam", "error with event array");
-//        }
-
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
         if (location != null)
         {
