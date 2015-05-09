@@ -63,11 +63,16 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-    //    if(!holder.bmImageIsSet) {
-        DownloadImageTask task = new DownloadImageTask(holder.imageView, position, holder);
+        if(event_photos[position].equals("null")){
+            holder.titleTextView.setText(event_titles[position]);
+            holder.addressTextView.setText(event_addresses[position]);
+            holder.event_id = event_ids[position];
+        }
+        else {
+            DownloadImageTask task = new DownloadImageTask(holder.imageView, position, holder);
             task.execute(event_photos[position]);
-   //         holder.bmImageIsSet = true;
-    //    }
+        }
+
     }
 
     @Override

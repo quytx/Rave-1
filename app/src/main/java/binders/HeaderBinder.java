@@ -74,7 +74,12 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
         }
 
 
-        holder.task.execute(data.eventImage);
+        if(!data.eventImage.equals("null")) {
+            holder.task.execute(data.eventImage);
+        }
+        else{
+            holder.eventImageView.setImageResource(R.drawable.madison_default);
+        }
 
 
         //holder.eventImageView.setImageResource(data.eventImage);
@@ -117,13 +122,15 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
         TextView mTitleText;
         ImageView eventImageView;
         ImageView attendingButton;
+        CircleImageView profilePic;
         TextView mContent;
         DownloadImageTask task;
 
         public ViewHolder(View view) {
             super(view);
             mTitleText = (TextView) view.findViewById(R.id.event_title_text);
-            task = new DownloadImageTask((ImageView) view.findViewById(R.id.event_detail_main_image));
+            eventImageView = (ImageView) view.findViewById(R.id.event_detail_main_image);
+            task = new DownloadImageTask(eventImageView);
             attendingButton = (ImageView) view.findViewById(R.id.check_mark);
         }
     }
