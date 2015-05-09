@@ -478,6 +478,10 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
             String json = GET(urls[0]);
 
+            if(events==null){
+                return "nay";
+            }
+            
             for(int n = 0; n < events.length(); n++)
             {
                 try {
