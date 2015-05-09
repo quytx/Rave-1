@@ -61,6 +61,9 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     private Toolbar toolbar;
     private final static String LOGOUT_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/sessions";
     private final static String EVENTS_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/events.json";
+    private static String MY_EVENTS_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/myevents/";
+    private static String ITINERARY_API_ENDPOINT_URL = "http://madrave.herokuapp.com/api/v1/attends/";
+
     private SharedPreferences mPreferences;
 
     //Declare Titles and Icons for Nav Drawer
@@ -79,6 +82,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     //Create string res for name and email in header view
     String NAME = "Jacob Pandl";
     String EMAIL = "jpandl19@gmail.com";
+    int userId = 0;
     int PROFILE_PIC = R.drawable.profile_pic_example;
 
 
@@ -192,14 +196,27 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                         currItemSelected = position;
                         child.setBackgroundColor(Color.LTGRAY);
                     }
+                    String toast = "";
+                    String myUrl = "";
+                    String userId = mPreferences.getString("UserID", "missing");
+                    switch (position) {
+                        case 1:  toast = "Event Stream";
+                                 myUrl = EVENTS_API_ENDPOINT_URL;
+                            break;
+                        case 2:  toast = "Itinerary";
+                                 myUrl = ITINERARY_API_ENDPOINT_URL + userId + ".json";
+                            break;
+                        case 3:  toast = "My Events";
+                                 myUrl = MY_EVENTS_API_ENDPOINT_URL + userId + ".json";
+                            break;
+                    }
 
-                    Toast.makeText(MainActivity.this, "The Item Clicked is: " +
-                            position, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, toast, Toast.LENGTH_SHORT).show();
 
 
                     drawerLayout.closeDrawers();
 
-                   // new HttpAsyncTask().execute(MY_EVENTS_API_ENDPOINT_URL);
+                    new HttpAsyncTask().execute(myUrl);
 
                     return true;
                 }
@@ -478,7 +495,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             EventStreamFragment eventStreamFragment = new EventStreamFragment();
             eventStreamFragment.setArguments(eventBundle);
-            fragmentTransaction.add(R.id.fragmentContainer, eventStreamFragment).commit();
+            fragmentTransaction.replace(R.id.fragmentContainer, eventStreamFragment).commit();
             return "yay!";
         }
         // onPostExecute displays the results of the AsyncTask.

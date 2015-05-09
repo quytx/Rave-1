@@ -13,7 +13,7 @@
         android:layout_height="200dp"
         android:id="@+id/uploadImage"
         android:scaleType="centerCrop"
-        android:src="@drawable/check_mark_gray"
+        android:src="@drawable/madison_default"
         android:layout_gravity="center_horizontal" />
 
     <Button
