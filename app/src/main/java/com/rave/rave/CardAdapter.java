@@ -67,6 +67,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             holder.titleTextView.setText(event_titles[position]);
             holder.addressTextView.setText(event_addresses[position]);
             holder.event_id = event_ids[position];
+            holder.imageView.setImageResource(R.drawable.madison_default);
         }
         else {
             DownloadImageTask task = new DownloadImageTask(holder.imageView, position, holder);

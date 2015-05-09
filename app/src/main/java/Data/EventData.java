@@ -13,6 +13,7 @@ public class EventData {
     public int profilePic;
     public String eventImage;
     public String eventID;
+    public String eventParticipantCount;
     public ArrayList<String> attendingListNames;
     public ArrayList<Integer> attendingListpics;
   //  public String[] details;

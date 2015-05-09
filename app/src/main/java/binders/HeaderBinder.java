@@ -67,7 +67,7 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
     @Override
     public void bindViewHolder(final ViewHolder holder, final int position) {
         EventData data = mDataSet.get(position);
-        holder.mTitleText.setText(data.eventTitle);
+        holder.eventParticipantCount.setText("# Attending: " + data.eventParticipantCount);
 
         if(!checkinStatusValid){
             checkedIn = checkIn(CHECKIN_STATUS_URL, position, holder.attendingButton);
@@ -119,7 +119,7 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView mTitleText;
+        TextView eventParticipantCount;
         ImageView eventImageView;
         ImageView attendingButton;
         CircleImageView profilePic;
@@ -128,7 +128,7 @@ public class HeaderBinder extends DataBinder<HeaderBinder.ViewHolder> {
 
         public ViewHolder(View view) {
             super(view);
-            mTitleText = (TextView) view.findViewById(R.id.event_title_text);
+            eventParticipantCount = (TextView) view.findViewById(R.id.event_participant_count);
             eventImageView = (ImageView) view.findViewById(R.id.event_detail_main_image);
             task = new DownloadImageTask(eventImageView);
             attendingButton = (ImageView) view.findViewById(R.id.check_mark);
