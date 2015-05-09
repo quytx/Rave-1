@@ -95,6 +95,7 @@ public class EventActivity extends ActionBarActivity {
             data.location = ourEvent.getString("location");
             data.latLng = getLocationFromAddress(data.location);
             data.eventID = ourEvent.getString("id");
+            data.eventParticipantCount = ourEvent.getString("participant_count");
  
         } catch (Exception e){
             Log.d("bam", "error with adding data");

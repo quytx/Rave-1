@@ -33,6 +33,8 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
     String[] EVENT_LOCATIONS;
     String[] EVENT_PHOTOS;
     String[] EVENT_IDS;
+    String[] EVENT_PARTICIPANTS_LIST;
+    String[] EVENT_PARTICPANT_COUNT;
     //Wrk
 
     String EVENTS = "";
@@ -56,6 +58,7 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
                 EVENT_LOCATIONS = eventDataParser.getEventLocations();
                 EVENT_PHOTOS = eventDataParser.getEventPhotos();
                 EVENT_IDS = eventDataParser.getEventIds();
+                EVENT_PARTICPANT_COUNT = eventDataParser.getEventParticipantCount();
             } catch (JSONException e) {
                 Log.d("bam", "error with event array");
             }
