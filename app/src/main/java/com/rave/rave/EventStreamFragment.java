@@ -62,9 +62,7 @@ public class EventStreamFragment extends Fragment implements AdapterView.OnItemC
                     EVENT_NAMES[i] = recs.getString("name");
                     EVENT_LOCATIONS[i] = recs.getString("location");
                     EVENT_PHOTOS[i] = recs.getString("cover_photo");
-                    if (EVENT_PHOTOS[i].equals("null")) {
-                        EVENT_PHOTOS[i] = "http://s30.postimg.org/43c1roizl/no_image_large.jpg";
-                    }
+
                     EVENT_IDS[i] = recs.getString("id");
                 }
             } catch (JSONException e) {

@@ -18,11 +18,11 @@
 
         <ImageView
             android:id="@+id/event_image"
+            android:src="@drawable/madison_default"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:clickable="true"
-            android:src="#ffffff"/>
+            android:clickable="true" />
 
 
         <TextView
